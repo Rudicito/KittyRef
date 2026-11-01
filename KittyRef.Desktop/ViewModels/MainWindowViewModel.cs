@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace KittyRef.ViewModels;
+namespace KittyRef.Desktop.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {

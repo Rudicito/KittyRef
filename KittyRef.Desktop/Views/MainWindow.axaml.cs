@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace KittyRef.Views;
+namespace KittyRef.Desktop.Views;
 
 public partial class MainWindow : Window
 {

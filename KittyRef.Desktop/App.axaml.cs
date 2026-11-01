@@ -1,12 +1,12 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using KittyRef.Services;
-using KittyRef.ViewModels;
-using KittyRef.Views;
+using KittyRef.Desktop.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MainWindow = KittyRef.Desktop.Views.MainWindow;
+using MainWindowViewModel = KittyRef.Desktop.ViewModels.MainWindowViewModel;
 
-namespace KittyRef;
+namespace KittyRef.Desktop;
 
 public partial class App : Application
 {

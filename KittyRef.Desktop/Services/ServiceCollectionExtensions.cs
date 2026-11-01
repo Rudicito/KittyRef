@@ -1,7 +1,7 @@
-using KittyRef.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using MainWindowViewModel = KittyRef.Desktop.ViewModels.MainWindowViewModel;
 
-namespace KittyRef.Services;
+namespace KittyRef.Desktop.Services;
 
 public static class ServiceCollectionExtensions
 {
