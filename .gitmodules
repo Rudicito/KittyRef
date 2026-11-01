@@ -1,0 +1,3 @@
+[submodule "external/osu-server-spectator"]
+	path = external/osu-server-spectator
+	url = https://github.com/ppy/osu-server-spectator
