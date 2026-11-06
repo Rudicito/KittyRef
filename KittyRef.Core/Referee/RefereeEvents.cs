@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using KittyRef.Core.Common;
 using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Events;
+using Microsoft.Extensions.Logging;
 
 namespace KittyRef.Core.Referee;
 
-public class RefereeEvents : IRefereeHubClient
+public class RefereeEvents(ILogger<RefereeHub> logger) : IRefereeHubClient
 {
     /// <inheritdoc cref="IRefereeHubClient.UserJoined"/>
     public event Action<UserJoinedEvent>? UserJoined;
@@ -99,16 +101,9 @@ public class RefereeEvents : IRefereeHubClient
     Task IRefereeHubClient.MatchAborted(MatchAbortedEvent info) => raise(MatchAborted, info);
     Task IRefereeHubClient.MatchCompleted(MatchCompletedEvent info) => raise(MatchCompleted, info);
 
-    private static Task raise<T>(Action<T>? handler, T info)
+    private Task raise<T>(Action<T>? handler, T info)
     {
-        try
-        {
-            handler?.Invoke(info);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine(ex);
-        }
+        handler.SafeInvoke(info, typeof(T).Name, logger);
 
         return Task.CompletedTask;
     }

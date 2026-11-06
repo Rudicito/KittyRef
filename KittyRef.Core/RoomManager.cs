@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
+using RoomSettingsChangedEvent = KittyRef.Core.Referee.Models.Events.RoomSettingsChangedEvent;
 
 namespace KittyRef.Core;
 
@@ -71,7 +73,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.Players.Add(new PlayerEvent
+            room.Players.Add(new Player
             {
                 UserId = (int)e.UserId
             });

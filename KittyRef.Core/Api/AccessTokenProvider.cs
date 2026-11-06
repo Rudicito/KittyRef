@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using KittyRef.Core.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ using osu.NET.Authorization;
 
 namespace KittyRef.Core.Api;
 
-public class AccessTokenProvider : ITokenSource, IOsuAccessTokenProvider
+public class AccessTokenProvider : ITokenSource, IOsuAccessTokenProvider, IDisposable
 {
     private const string token_url = "https://osu.ppy.sh/oauth/token";
     private readonly HttpClient httpClient = new();
@@ -124,8 +125,7 @@ public class AccessTokenProvider : ITokenSource, IOsuAccessTokenProvider
         refreshToken = osuCodeResponse.RefreshToken!;
         expirationDate = DateTimeOffset.UtcNow.AddSeconds(osuCodeResponse.ExpiresIn!.Value);
 
-        try { TokenRefreshed?.Invoke(accessToken); }
-        catch (Exception ex) { logger.LogError(ex, "TokenRefreshed handler failed"); }
+        TokenRefreshed.SafeInvoke(accessToken, nameof(TokenRefreshed), logger);
     }
 
     private async Task<OsuCodeTokenResponse> deserializeRequest(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -151,5 +151,11 @@ public class AccessTokenProvider : ITokenSource, IOsuAccessTokenProvider
                 "The access token or expiration date is null, but no error was reported.");
 
         return accessTokenResponse;
+    }
+
+    public void Dispose()
+    {
+        httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
