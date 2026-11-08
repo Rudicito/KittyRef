@@ -3,9 +3,9 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
+using osu.Game.Online.Rooms;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A playlist item in a multiplayer room has changed.
@@ -24,5 +24,16 @@ namespace KittyRef.Core.Referee.Models.Events
         /// </summary>
         [JsonPropertyName("playlist_item")]
         public PlaylistItem PlaylistItem { get; set; } = null!;
+
+        [JsonConstructor]
+        public PlaylistItemChangedEvent()
+        {
+        }
+
+        internal PlaylistItemChangedEvent(long roomId, MultiplayerPlaylistItem item)
+        {
+            RoomId = roomId;
+            PlaylistItem = new PlaylistItem(item);
+        }
     }
 }

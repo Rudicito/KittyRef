@@ -3,9 +3,8 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A user has changed their selection of allowed mods.

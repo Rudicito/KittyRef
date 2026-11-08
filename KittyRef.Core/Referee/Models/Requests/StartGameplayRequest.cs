@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace KittyRef.Core.Referee.Models.Requests
+namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
 {
     /// <summary>
     /// Starts gameplay now or in the immediate future.

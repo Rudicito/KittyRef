@@ -3,7 +3,7 @@
 
 using JetBrains.Annotations;
 
-namespace KittyRef.Core.Referee.Models.Requests
+namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
 {
     /// <summary>
     /// Changes the current playlist item.

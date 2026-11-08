@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A user has been kicked from a refereed room.

@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A playlist item has been removed from a multiplayer room.

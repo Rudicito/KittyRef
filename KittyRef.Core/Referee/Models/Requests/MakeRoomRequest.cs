@@ -3,9 +3,9 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
+using osu.Server.Spectator.Hubs.Multiplayer;
 
-namespace KittyRef.Core.Referee.Models.Requests
+namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
 {
     /// <summary>
     /// Makes a new multiplayer room.
@@ -16,7 +16,7 @@ namespace KittyRef.Core.Referee.Models.Requests
         /// <summary>
         /// The maximum allowable value of <see cref="MaxParticipants"/>.
         /// </summary>
-        public const int MAX_PARTICIPANTS_LIMIT = 16;
+        public const int MAX_PARTICIPANTS_LIMIT = ServerMultiplayerRoom.MAX_PARTICIPANTS_LIMIT; // duplicated here only so that it shows in API docs as linkable number
 
         /// <summary>
         /// The ID of the ruleset to play.
@@ -38,14 +38,14 @@ namespace KittyRef.Core.Referee.Models.Requests
 
         /// <summary>
         /// The match type to use.
-        /// Defaults to <see cref="Core.Models.MatchType.HeadToHead"/> if not supplied.
+        /// Defaults to <see cref="Models.MatchType.HeadToHead"/> if not supplied.
         /// </summary>
         [JsonPropertyName("type")]
         public MatchType MatchType { get; set; } = MatchType.HeadToHead;
 
         /// <summary>
         /// The queue mode to use.
-        /// Defaults to <see cref="Core.Models.QueueMode.HostOnly"/> if not supplied.
+        /// Defaults to <see cref="Models.QueueMode.HostOnly"/> if not supplied.
         /// </summary>
         [JsonPropertyName("queue_mode")]
         public QueueMode QueueMode { get; set; } = QueueMode.HostOnly;

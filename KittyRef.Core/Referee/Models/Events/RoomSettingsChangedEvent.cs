@@ -3,10 +3,9 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
-using KittyRef.Core.Referee.Models.Requests;
+using osu.Game.Online.Multiplayer;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A room's settings have changed.
@@ -50,8 +49,24 @@ namespace KittyRef.Core.Referee.Models.Events
         [JsonPropertyName("playlist_item_id")]
         public long PlaylistItemId { get; set; }
 
-        /// <inheritdoc cref="MakeRoomRequest.MaxParticipants"/>
+        /// <inheritdoc cref="Requests.MakeRoomRequest.MaxParticipants"/>
         [JsonPropertyName("max_participants")]
         public byte? MaxParticipants { get; set; }
+
+        [JsonConstructor]
+        public RoomSettingsChangedEvent()
+        {
+        }
+
+        internal RoomSettingsChangedEvent(long roomId, MultiplayerRoomSettings settings)
+        {
+            RoomId = roomId;
+            Name = settings.Name;
+            Password = settings.Password;
+            Type = (MatchType)settings.MatchType;
+            QueueMode = (QueueMode)settings.QueueMode;
+            PlaylistItemId = settings.PlaylistItemId;
+            MaxParticipants = settings.MaxParticipants;
+        }
     }
 }

@@ -4,9 +4,8 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
 
-namespace KittyRef.Core.Referee.Models.Events
+namespace osu.Server.Spectator.Hubs.Referee.Models.Events
 {
     /// <summary>
     /// A game has started in a multiplayer room.
@@ -35,7 +34,7 @@ namespace KittyRef.Core.Referee.Models.Events
         /// <summary>
         /// Mapping containing team membership of players in the room.
         /// Keys are user IDs, values are their <see cref="MatchTeam"/>s.
-        /// Only applicable in <see cref="MatchType.TeamVersus"/>.
+        /// Only applicable in <see cref="Models.MatchType.TeamVersus"/>.
         /// </summary>
         [JsonPropertyName("teams")]
         public Dictionary<int, MatchTeam>? Teams { get; init; }
