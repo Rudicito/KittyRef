@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
-using RoomSettingsChangedEvent = KittyRef.Core.Referee.Models.Events.RoomSettingsChangedEvent;
 
 namespace KittyRef.Core;
 
 public class RoomManager
 {
+    private readonly Action<Action> post;
+
     public IReadOnlyDictionary<long, Room> Rooms => rooms;
     private Dictionary<long, Room> rooms;
 
@@ -19,8 +20,9 @@ public class RoomManager
 
     private readonly RefereeHub refereeHub;
 
-    public RoomManager(RefereeHub refereeHub)
+    public RoomManager(RefereeHub refereeHub, Action<Action> post)
     {
+        this.post = post;
         this.refereeHub = refereeHub;
         rooms = new Dictionary<long, Room>();
         listRoom = new Dictionary<long, RoomInfo>();
@@ -29,16 +31,23 @@ public class RoomManager
     public async Task OpenRoom(RoomInfo roomInfo)
     {
         var response = await refereeHub.Hub.JoinRoom(roomInfo.RoomId);
-        rooms.Add(response.RoomId, new Room(refereeHub.Hub, response));
+
+        post(() =>
+        {
+            rooms.Add(response.RoomId, new Room(refereeHub.Hub, response));
+        });
     }
 
     public async Task ReloadListRoom()
     {
         var response = await refereeHub.Hub.ListRooms();
 
-        listRoom = response.RoomIDs
-            .Select(id => new RoomInfo { RoomId = id })
-            .ToDictionary(r => r.RoomId);
+        post(() =>
+        {
+            listRoom = response.RoomIDs
+                .Select(id => new RoomInfo { RoomId = id })
+                .ToDictionary(r => r.RoomId);
+        });
     }
 
     #region EventHandler
@@ -84,7 +93,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            var player = room.Players.FirstOrDefault(p => p.UserId == e.UserId);
+            var player = room.GetPlayer(e.UserId);
             if (player != null) room.Players.Remove(player);
         });
     }
@@ -93,16 +102,17 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            var player = room.Players.FirstOrDefault(p => p.UserId == e.KickedUserId);
+            var player = room.GetPlayer(e.KickedUserId);
             if (player != null) room.Players.Remove(player);
         });
     }
 
+    //todo: add banned players list in Room
     private void onUserBanned(UserBannedEvent e)
     {
         updateRoom(e.RoomId, room =>
         {
-            var player = room.Players.FirstOrDefault(p => p.UserId == e.BannedUserId);
+            var player = room.GetPlayer(e.BannedUserId);
             if (player != null) room.Players.Remove(player);
         });
     }
@@ -138,6 +148,12 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            room.Name = e.Name;
+            room.Password = e.Password;
+            room.Type = e.Type;
+            room.QueueMode = e.QueueMode;
+            //todo: use e.PlaylistItemId
+            room.MaxParticipants = e.MaxParticipants;
         });
     }
 
@@ -145,6 +161,9 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            room.Type = e.State.Type;
+            room.Locked = e.State.Locked;
+            room.Slots = e.State.Slots?.ToArray();
         });
     }
 
@@ -152,6 +171,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            room.Playlist.Add(e.PlaylistItem);
         });
     }
 
@@ -159,6 +179,17 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var i = e.PlaylistItem;
+            var playlistItem = room.GetPlaylistItem(i.PlaylistItemId);
+            if (playlistItem == null) return;
+
+            playlistItem.RulesetId = i.RulesetId;
+            playlistItem.BeatmapId = i.BeatmapId;
+            playlistItem.RequiredMods = i.RequiredMods.ToArray();
+            playlistItem.AllowedMods = i.AllowedMods.ToArray();
+            playlistItem.WasPlayed = i.WasPlayed;
+            playlistItem.Freestyle = i.Freestyle;
+            playlistItem.Order = i.Order;
         });
     }
 
@@ -166,6 +197,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var playlistItem = room.GetPlaylistItem(e.PlaylistItemId);
+            if (playlistItem != null) room.Playlist.Remove(playlistItem);
         });
     }
 
@@ -180,6 +213,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var player = room.Players.FirstOrDefault(p => p.UserId == e.UserId);
+            player?.Status = e.Status;
         });
     }
 
@@ -187,6 +222,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var player = room.GetPlayer(e.UserId);
+            player?.UserMods = e.UserMods.ToArray();
         });
     }
 
@@ -194,6 +231,11 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var player = room.GetPlayer(e.UserId);
+            if (player == null) return;
+
+            player.Style.RulesetId = e.RulesetId;
+            player.Style.BeatmapId = e.BeatmapId;
         });
     }
 
@@ -201,6 +243,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var player = room.GetPlayer(e.UserId);
+            player?.Team = e.Team;
         });
     }
 
@@ -239,13 +283,17 @@ public class RoomManager
         });
     }
 
-    private void updateRoom(long roomId, Action<Room> change)
+    private void updateRoom(long roomId, Action<Room> change, bool triggerChanged = true)
     {
-        if (!rooms.TryGetValue(roomId, out var room))
-            return;
+        post(() =>
+        {
+            if (!rooms.TryGetValue(roomId, out var room))
+                return;
 
-        change(room);
-        room.NotifyChanged();
+            change(room);
+
+            if (triggerChanged) room.NotifyChanged();
+        });
     }
 
     #endregion

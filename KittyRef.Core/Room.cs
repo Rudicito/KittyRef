@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee.Models;
+using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
 
@@ -17,42 +18,42 @@ public class Room
     /// <summary>
     /// The ID of the room.
     /// </summary>
-    public long RoomId { get; private set; }
+    public long RoomId { get; internal set; }
 
     /// <summary>
     /// The ID of the chat channel for the joined multiplayer room.
     /// </summary>
-    public int ChatChannelId { get; private set; }
+    public int ChatChannelId { get; internal set; }
 
     /// <summary>
     /// The name of the room.
     /// </summary>
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; internal set; } = string.Empty;
 
     /// <summary>
     /// The password to the room.
     /// </summary>
-    public string Password { get; private set; } = string.Empty;
+    public string Password { get; internal set; } = string.Empty;
 
     /// <summary>
     /// The maximum number of players in the room.
     /// <list type="bullet">
     /// <item>If 0 or missing, the room will allow an unlimited number of participants, but will not have enabled player slots.</item>
-    /// <item>If in the range [2, <see cref="Core.Referee.Models.Requests.MakeRoomRequest.MAX_PARTICIPANTS_LIMIT"/>] inclusive, the room will have the given number of slots to be occupied by participants.</item>
+    /// <item>If in the range [2, <see cref="MakeRoomRequest.MAX_PARTICIPANTS_LIMIT"/>] inclusive, the room will have the given number of slots to be occupied by participants.</item>
     /// </list>
     /// </summary>
-    public int? MaxParticipants { get; private set; }
+    public int? MaxParticipants { get; internal set; }
 
     /// <summary>
     /// The current match type.
     /// </summary>
-    public MatchType Type { get; set; }
+    public MatchType Type { get; internal set; }
 
     /// <summary>
     /// Whether the room is currently locked.
     /// When the room is locked, players cannot change teams themselves, only referees can change it for them.
     /// </summary>
-    public bool Locked { get; set; }
+    public bool Locked { get; internal set; }
 
     /// <summary>
     /// <para>
@@ -73,18 +74,18 @@ public class Room
     /// </summary>
     /// <seealso cref="MakeRoomRequest.MaxParticipants"/>
     /// <seealso cref="RoomSettingsChangedEvent.MaxParticipants"/>
-    public int?[]? Slots { get; set; }
+    public int?[]? Slots { get; internal set; }
 
     /// <summary>
     /// The current queue mode of the room.
     /// </summary>
-    public QueueMode QueueMode { get; private set; }
+    public QueueMode QueueMode { get; internal set; }
 
-    public PlaylistItem[] Playlist { get; private set; } = [];
+    public List<PlaylistItem> Playlist { get; internal set; } = [];
 
-    public List<Player> Players { get; private set; } = [];
+    public List<Player> Players { get; internal set; } = [];
 
-    public List<Models.Referee> Referees { get; private set; } = [];
+    public List<Models.Referee> Referees { get; internal set; } = [];
 
     /// <summary>
     /// Trigger at each property modification
@@ -111,12 +112,22 @@ public class Room
         Locked = response.State.Locked;
         Slots = response.State.Slots;
         QueueMode = response.QueueMode;
-        Playlist = response.Playlist;
+        Playlist = response.Playlist.ToList();
         Players = response.Players.ToList();
         Referees = response.Referees.ToList();
     }
 
-    #region Methods
+    #region Helper methods
+
+    public PlaylistItem? GetPlaylistItem(long playlistItemId) => Playlist.FirstOrDefault(p => p.PlaylistItemId == playlistItemId);
+
+    public Player? GetPlayer(long userId) => Players.FirstOrDefault(p => p.UserId == userId);
+
+    public Models.Referee? GetReferee(long userId) => Referees.FirstOrDefault(r => r.UserId == userId);
+
+    #endregion
+
+    #region Referee methods
 
     /// <inheritdoc cref="IRefereeHubServer.CloseRoom"/>
     public Task CloseRoom()
