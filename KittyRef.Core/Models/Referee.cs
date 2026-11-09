@@ -5,11 +5,11 @@ namespace KittyRef.Core.Models
         /// <summary>
         /// The ID of the referee.
         /// </summary>
-        public int UserId { get; set; }
+        public int UserId { get; internal set; }
 
         /// <summary>
         /// The name of the referee
         /// </summary>
-        public string Username { get; set; } = string.Empty;
+        public string Username { get; internal set; } = string.Empty;
     }
 }

@@ -8,7 +8,6 @@ using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
-using QueueMode = KittyRef.Core.Models.QueueMode;
 
 namespace KittyRef.Core;
 
