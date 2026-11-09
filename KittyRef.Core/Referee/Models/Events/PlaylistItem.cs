@@ -1,12 +1,10 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Linq;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Game.Online.Rooms;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// Represents a playlist item.
@@ -62,22 +60,5 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Events
         /// </summary>
         [JsonPropertyName("order")]
         public int Order { get; set; }
-
-        [JsonConstructor]
-        public PlaylistItem()
-        {
-        }
-
-        public PlaylistItem(MultiplayerPlaylistItem item)
-        {
-            PlaylistItemId = item.ID;
-            RulesetId = item.RulesetID;
-            BeatmapId = item.BeatmapID;
-            RequiredMods = item.RequiredMods.Select(Mod.FromAPIMod).ToArray();
-            AllowedMods = item.AllowedMods.Select(Mod.FromAPIMod).ToArray();
-            Freestyle = item.Freestyle;
-            WasPlayed = item.Expired;
-            Order = item.PlaylistOrder;
-        }
     }
 }

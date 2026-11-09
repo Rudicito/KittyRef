@@ -3,9 +3,8 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Game.Online.Multiplayer;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// A roll has completed in the room.
@@ -36,18 +35,5 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Events
         /// </summary>
         [JsonPropertyName("result")]
         public uint Result { get; set; }
-
-        [JsonConstructor]
-        public RollCompletedEvent()
-        {
-        }
-
-        internal RollCompletedEvent(long roomId, RollEvent e)
-        {
-            RoomId = roomId;
-            UserId = e.UserID;
-            Max = e.Max;
-            Result = e.Result;
-        }
     }
 }

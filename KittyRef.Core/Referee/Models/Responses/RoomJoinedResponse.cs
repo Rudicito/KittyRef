@@ -1,16 +1,12 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using System.Linq;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Framework.Extensions.TypeExtensions;
-using osu.Game.Online.Multiplayer;
-using osu.Server.Spectator.Hubs.Referee.Models.Events;
-using osu.Server.Spectator.Hubs.Referee.Models.Requests;
+using KittyRef.Core.Referee.Models.Events;
+using KittyRef.Core.Referee.Models.Requests;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Responses
+namespace KittyRef.Core.Referee.Models.Responses
 {
     /// <summary>
     /// Contains information about a room that was just joined.
@@ -72,24 +68,5 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Responses
 
         [JsonPropertyName("referees")]
         public Events.Referee[] Referees { get; set; } = [];
-
-        [JsonConstructor]
-        public RoomJoinedResponse()
-        {
-        }
-
-        internal RoomJoinedResponse(MultiplayerRoom room)
-        {
-            RoomId = room.RoomID;
-            ChatChannelId = room.ChannelID;
-            Name = room.Settings.Name;
-            Password = room.Settings.Password;
-            MaxParticipants = room.Settings.MaxParticipants ?? 0;
-            State = MatchState.Create(room) ?? throw new InvalidOperationException($"Could not create room state (ID: {room.RoomID}, state type: {room.MatchState?.GetType().ReadableName()})");
-            QueueMode = (QueueMode)room.Settings.QueueMode;
-            Playlist = room.Playlist.Select(item => new PlaylistItem(item)).ToArray();
-            Players = room.Users.Where(u => u.Role == MultiplayerRoomUserRole.Player).Select(u => new Player(u)).ToArray();
-            Referees = room.Users.Where(u => u.Role == MultiplayerRoomUserRole.Referee).Select(u => new Events.Referee(u)).ToArray();
-        }
     }
 }

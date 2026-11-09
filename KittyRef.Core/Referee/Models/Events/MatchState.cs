@@ -1,14 +1,11 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Framework.Extensions.TypeExtensions;
-using osu.Game.Online.Multiplayer;
-using osu.Server.Spectator.Hubs.Referee.Models.Requests;
+using KittyRef.Core.Referee.Models.Requests;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// Contains the current state of the room.
@@ -50,27 +47,5 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Events
         /// <seealso cref="RoomSettingsChangedEvent.MaxParticipants"/>
         [JsonPropertyName("slots")]
         public int?[]? Slots { get; }
-
-        protected MatchState(MatchType type, bool locked, int?[]? slots)
-        {
-            Type = type;
-            Locked = locked;
-            Slots = slots;
-        }
-
-        internal static MatchState Create(MultiplayerRoom room)
-        {
-            switch (room.MatchState)
-            {
-                case StandardMatchRoomState standardRoomState:
-                    return new MatchState((MatchType)room.Settings.MatchType, standardRoomState.Locked, standardRoomState.Slots);
-
-                case null:
-                    return new MatchState((MatchType)room.Settings.MatchType, false, null);
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(room.MatchState), room.MatchState, $"Cannot handle room state of type {room.MatchState.GetType().ReadableName()}");
-            }
-        }
     }
 }

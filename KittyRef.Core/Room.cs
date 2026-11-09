@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KittyRef.Core.Models;
+using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
-using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
+using QueueMode = KittyRef.Core.Models.QueueMode;
 
 namespace KittyRef.Core;
 
@@ -73,7 +74,7 @@ public class Room
     /// </para>
     /// </summary>
     /// <seealso cref="MakeRoomRequest.MaxParticipants"/>
-    /// <seealso cref="RoomSettingsChangedEvent.MaxParticipants"/>
+    /// <seealso cref="Core.Referee.Models.Events.RoomSettingsChangedEvent.MaxParticipants"/>
     public int?[]? Slots { get; internal set; }
 
     /// <summary>

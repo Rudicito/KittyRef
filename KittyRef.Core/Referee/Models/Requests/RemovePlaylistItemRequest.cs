@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
+namespace KittyRef.Core.Referee.Models.Requests
 {
     /// <summary>
     /// Removes an item from the room playlist.

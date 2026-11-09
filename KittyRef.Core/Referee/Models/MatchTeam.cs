@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models
+namespace KittyRef.Core.Referee.Models
 {
     /// <summary>
     /// Enumerates possible teams in rooms.

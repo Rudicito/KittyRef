@@ -3,9 +3,8 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Server.Spectator.Hubs.Multiplayer;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
+namespace KittyRef.Core.Referee.Models.Requests
 {
     /// <summary>
     /// Makes a new multiplayer room.
@@ -16,7 +15,7 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Requests
         /// <summary>
         /// The maximum allowable value of <see cref="MaxParticipants"/>.
         /// </summary>
-        public const int MAX_PARTICIPANTS_LIMIT = ServerMultiplayerRoom.MAX_PARTICIPANTS_LIMIT; // duplicated here only so that it shows in API docs as linkable number
+        public const int MAX_PARTICIPANTS_LIMIT = 16;
 
         /// <summary>
         /// The ID of the ruleset to play.

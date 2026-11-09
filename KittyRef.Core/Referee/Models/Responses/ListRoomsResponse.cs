@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Responses
+namespace KittyRef.Core.Referee.Models.Responses
 {
     /// <summary>
     /// Contains the list of all rooms that the caller is a referee in.

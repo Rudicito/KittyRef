@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// The room's <see cref="MatchType"/>-related state has changed.

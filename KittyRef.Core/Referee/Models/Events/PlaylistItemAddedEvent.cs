@@ -3,9 +3,8 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Game.Online.Rooms;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// A playlist item has been added to a multiplayer room.
@@ -24,16 +23,5 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Events
         /// </summary>
         [JsonPropertyName("playlist_item")]
         public PlaylistItem PlaylistItem { get; set; } = null!;
-
-        [JsonConstructor]
-        public PlaylistItemAddedEvent()
-        {
-        }
-
-        internal PlaylistItemAddedEvent(long roomId, MultiplayerPlaylistItem item)
-        {
-            RoomId = roomId;
-            PlaylistItem = new PlaylistItem(item);
-        }
     }
 }

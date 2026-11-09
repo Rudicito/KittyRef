@@ -1,14 +1,10 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using System.Linq;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using osu.Game.Online.Multiplayer;
-using osu.Game.Online.Multiplayer.MatchTypes.TeamVersus;
 
-namespace osu.Server.Spectator.Hubs.Referee.Models.Events
+namespace KittyRef.Core.Referee.Models.Events
 {
     /// <summary>
     /// Represents a player in the room.
@@ -52,57 +48,6 @@ namespace osu.Server.Spectator.Hubs.Referee.Models.Events
         /// <seealso cref="IRefereeHubClient.UserTeamChanged"/>
         [JsonPropertyName("team")]
         public MatchTeam? Team { get; set; }
-
-        [Newtonsoft.Json.JsonConstructor]
-        public Player()
-        {
-        }
-
-        internal Player(MultiplayerRoomUser user)
-        {
-            if (user.Role != MultiplayerRoomUserRole.Player)
-                throw new ArgumentException(nameof(user));
-
-            UserId = user.UserID;
-
-            switch (user.State)
-            {
-                case MultiplayerUserState.Idle:
-                default:
-                    Status = MatchUserStatus.Idle;
-                    break;
-
-                case MultiplayerUserState.Ready:
-                case MultiplayerUserState.WaitingForLoad:
-                case MultiplayerUserState.Loaded:
-                case MultiplayerUserState.ReadyForGameplay:
-                    Status = MatchUserStatus.Ready;
-                    break;
-
-                case MultiplayerUserState.Playing:
-                    Status = MatchUserStatus.Playing;
-                    break;
-
-                case MultiplayerUserState.FinishedPlay:
-                case MultiplayerUserState.Results:
-                    Status = MatchUserStatus.FinishedPlay;
-                    break;
-
-                case MultiplayerUserState.Spectating:
-                    Status = MatchUserStatus.Spectating;
-                    break;
-            }
-
-            Style = new Style
-            {
-                RulesetId = user.RulesetId,
-                BeatmapId = user.BeatmapId,
-            };
-            UserMods = user.Mods.Select(Mod.FromAPIMod).ToArray();
-
-            if (user.MatchState is TeamVersusUserState teamVersusUserState)
-                Team = (MatchTeam)teamVersusUserState.TeamID;
-        }
     }
 
     public class Style
