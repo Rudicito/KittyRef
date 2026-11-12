@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 using McMaster.Extensions.CommandLineUtils;
 using osu.Framework.Bindables;
@@ -65,6 +66,7 @@ namespace KittyRef.Generators.Mods
                 ValidForFreestyleAsRequiredMod = mod.ValidForFreestyleAsRequiredMod.ToString().ToLowerInvariant(),
                 ValidForMultiplayerAsFreeMod = mod.ValidForMultiplayerAsFreeMod.ToString().ToLowerInvariant(),
                 AlwaysValidForSubmission = mod.AlwaysValidForSubmission.ToString().ToLowerInvariant(),
+                Ranked = mod.Ranked.ToString().ToLowerInvariant()
             });
 
             foreach (var mod in mods) createClassFile(mod);
@@ -74,7 +76,7 @@ namespace KittyRef.Generators.Mods
             {
                 string result = template.Render(new {m = mod});
 
-                string path = Path.Combine(dir, $"{mod.ClassName}.g.cs");
+                string path = Path.Combine(dir, $"{mod.ClassName}.cs");
                 File.WriteAllText(path, result.ReplaceLineEndings("\n"));
             }
 
@@ -102,86 +104,113 @@ namespace KittyRef.Generators.Mods
                     string description = settingsSource.Description.ToString();
 
                     string type;
-                        switch (bindable)
-                        {
-                            case BindableNumber<double> bd:
-                                type = getModSettingString<double>(name, label, description, bd.Default, bd.MinValue,
-                                    bd.MaxValue, bd.Precision, false, false);
-                                break;
+                    dynamic? enumSetting = null;
 
-                            case BindableNumber<float> bd:
-                                type = getModSettingString<float>(name, label, description, bd.Default, bd.MinValue,
-                                    bd.MaxValue, bd.Precision, false, false);
-                                break;
+                    switch (bindable)
+                    {
+                        case DifficultyBindable bd:
+                            type = getModSettingString<float>(name, label, description, 5, bd.ExtendedMinValue ?? bd.MinValue,
+                                bd.ExtendedMaxValue ?? bd.MaxValue, getPrecisionDifficultyBindable(bd), false, false);
+                            break;
 
-                            case BindableNumber<int> bd:
-                                type = getModSettingString<int>(name, label, description, bd.Default, bd.MinValue,
-                                    bd.MaxValue, bd.Precision, true, false);
-                                break;
+                        case BindableNumber<double> bd:
+                            type = getModSettingString<double>(name, label, description, bd.Default, bd.MinValue,
+                                bd.MaxValue, bd.Precision, false, false);
+                            break;
 
-                            case BindableNumber<long> bd:
-                                type = getModSettingString<long>(name, label, description, bd.Default, bd.MinValue,
-                                    bd.MaxValue, bd.Precision, true, false);
-                                break;
+                        case BindableNumber<float> bd:
+                            type = getModSettingString<float>(name, label, description, bd.Default, bd.MinValue,
+                                bd.MaxValue, bd.Precision, false, false);
+                            break;
 
-                            case IBindable<double> bd:
-                                type = getModSettingString<double>(name, label, description, bd.Default, null,
-                                    null, null, false, false);
-                                break;
+                        case BindableNumber<int> bd:
+                            type = getModSettingString<int>(name, label, description, bd.Default, bd.MinValue,
+                                bd.MaxValue, bd.Precision, true, false);
+                            break;
 
-                            case IBindable<double?> bd:
-                                type = getModSettingString(name, label, description, bd.Default, null,
-                                    null, null, false, true);
-                                break;
+                        case BindableNumber<long> bd:
+                            type = getModSettingString<long>(name, label, description, bd.Default, bd.MinValue,
+                                bd.MaxValue, bd.Precision, true, false);
+                            break;
 
-                            case IBindable<float> bd:
-                                type = getModSettingString<float>(name, label, description, bd.Default, null,
-                                    null, null, false, false);
-                                break;
+                        case IBindable<double> bd:
+                            type = getModSettingString<double>(name, label, description, bd.Default, null,
+                                null, null, false, false);
+                            break;
 
-                            case IBindable<float?> bd:
-                                type = getModSettingString(name, label, description, bd.Default, null,
-                                    null, null, false, true);
-                                break;
+                        case IBindable<double?> bd:
+                            type = getModSettingString(name, label, description, bd.Default, null,
+                                null, null, false, true);
+                            break;
 
-                            case IBindable<int> bd:
-                                type = getModSettingString<int>(name, label, description, bd.Default, null,
-                                    null, null, true, false);
-                                break;
+                        case IBindable<float> bd:
+                            type = getModSettingString<float>(name, label, description, bd.Default, null,
+                                null, null, false, false);
+                            break;
 
-                            case IBindable<int?> bd:
-                                type = getModSettingString(name, label, description, bd.Default, null,
-                                    null, null, true, true);
-                                break;
+                        case IBindable<float?> bd:
+                            type = getModSettingString(name, label, description, bd.Default, null,
+                                null, null, false, true);
+                            break;
 
-                            case IBindable<long> bd:
-                                type = getModSettingString<long>(name, label, description, bd.Default, null,
-                                    null, null, true, false);
-                                break;
+                        case IBindable<int> bd:
+                            type = getModSettingString<int>(name, label, description, bd.Default, null,
+                                null, null, true, false);
+                            break;
 
-                            case IBindable<long?> bd:
-                                type = getModSettingString(name, label, description, bd.Default, null,
-                                    null, null, true, true);
-                                break;
+                        case IBindable<int?> bd:
+                            type = getModSettingString(name, label, description, bd.Default, null,
+                                null, null, true, true);
+                            break;
 
-                            case IBindable<bool> bd:
-                                type = $"BoolSetting({name}, {label}, {description}, {bd.Default})";
-                                break;
+                        case IBindable<long> bd:
+                            type = getModSettingString<long>(name, label, description, bd.Default, null,
+                                null, null, true, false);
+                            break;
 
-                            case IBindable<string> bd:
-                                type = $"StringSetting({name}, {label}, {description}, {bd.Default})";
-                                break;
+                        case IBindable<long?> bd:
+                            type = getModSettingString(name, label, description, bd.Default, null,
+                                null, null, true, true);
+                            break;
 
-                            default:
-                                var notImplementedType = bindable.GetType().GetInterface("IBindable`1")
-                                    ?.GenericTypeArguments.FirstOrDefault();
-                                throw new Exception($"Bindable type not implemented {notImplementedType}");
-                        }
+                        case IBindable<bool> bd:
+                            type = $"BoolSetting(\"{name}\", \"{label}\", \"{description}\", {bd.Default.ToString().ToLowerInvariant()})";
+                            break;
+
+                        case IBindable<string> bd:
+                            type = $"StringSetting(\"{name}\", \"{label}\", \"{description}\", \"{bd.Default}\")";
+                            break;
+
+                        default:
+                            var bdP = bindable.GetType().GetInterface("IBindable`1");
+                            if (bdP == null)
+                                throw new Exception("Bindable was expected");
+
+                            var bdType = bdP.GenericTypeArguments.FirstOrDefault();
+
+                            if (!(bdType?.IsEnum ?? false))
+                                throw new Exception($"Bindable type not implemented {bdType}");
+
+                            string enumName = bdType.Name;
+                            var enumValueList = bdType.GetEnumNames().ToList();
+                            Debug.Assert(enumValueList.Count > 0);
+                            object? enumDefault = bdP.GetProperty("Default")!.GetValue(bindable);
+
+                            type = $"EnumSetting<{enumName}>(\"{name}\", \"{label}\", \"{description}\", {enumName}.{enumDefault})";
+
+                            enumSetting = new
+                            {
+                                Name = enumName,
+                                Values = enumValueList
+                            };
+                            break;
+                    }
 
                     yield return new
                     {
                         Name = propertyInfo.Name.ToSnakeCase(),
                         TypeMethod = type,
+                        EnumSetting = enumSetting,
                         Label = settingsSource.Label.ToString(),
                         Description = settingsSource.Description.ToString(),
                     };
@@ -201,7 +230,17 @@ namespace KittyRef.Generators.Mods
             bool canBeNull
         ) where T : struct
         {
-            return $"new NumberSetting({name}, {label}, {description}, {@default}, {minValue}, {maxValue}, {precision}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
+            return $"NumberSetting(\"{name}\", \"{label}\", \"{description}\", {@default}, {minValue}, {maxValue}, {precision}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
+        }
+
+        private static readonly FieldInfo current_number_field =
+            typeof(DifficultyBindable).GetField("CurrentNumber",
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        private static float getPrecisionDifficultyBindable(DifficultyBindable db)
+        {
+            var current = (BindableFloat)current_number_field.GetValue(db)!;
+            return current.Precision;
         }
     }
 }

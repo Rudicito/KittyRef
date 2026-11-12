@@ -29,4 +29,8 @@
         <PackageReference Include="Scriban" Version="7.6.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Generated\" />
+    </ItemGroup>
+
 </Project>

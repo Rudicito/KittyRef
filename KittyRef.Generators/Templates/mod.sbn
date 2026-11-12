@@ -14,16 +14,16 @@ namespace KittyRef.Core.Models.Mods.{{ m.ruleset }}
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-        {{- for im in incompatible_mods -}}
-            typeof({{ im.name }}),
-        {{- end -}}
+        {{~ for im in m.incompatible_mods ~}}
+            typeof({{ im }}),
+        {{~ end ~}}
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>
         [
-        {{- for s in m.settings -}}
-            new ({{ s.type_method }}),
-        {{- end -}}
+        {{~ for s in m.settings ~}}
+            new {{ s.type_method }},
+        {{~ end ~}}
         ];
 
         public override bool UserPlayable => {{ m.user_playable }};
@@ -33,4 +33,15 @@ namespace KittyRef.Core.Models.Mods.{{ m.ruleset }}
         public override bool AlwaysValidForSubmission => {{ m.always_valid_for_submission }};
         public override bool Ranked => {{ m.ranked }};
     }
+    {{~ for s in m.settings ~}}
+    {{~ if s.enum_setting ~}}
+
+    public enum {{ s.enum_setting.name }}
+    {
+    {{~ for ev in s.enum_setting.values ~}}
+        {{ ev }},
+    {{~ end ~}}
+    }
+    {{~ end ~}}
+    {{~ end ~}}
 }
