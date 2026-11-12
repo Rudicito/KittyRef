@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using KittyRef.Core.Models.Mods.Settings;
 
 namespace KittyRef.Core.Models.Mods
 {
