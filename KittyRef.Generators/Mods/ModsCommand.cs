@@ -230,7 +230,7 @@ namespace KittyRef.Generators.Mods
             bool canBeNull
         ) where T : struct
         {
-            return $"NumberSetting(\"{name}\", \"{label}\", \"{description}\", {@default}, {minValue}, {maxValue}, {precision}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
+            return $"NumberSetting(\"{name}\", \"{label}\", \"{description}\", {@default ?? null}, {minValue ?? null}, {maxValue ?? null}, {precision ?? null}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
         }
 
         private static readonly FieldInfo current_number_field =
