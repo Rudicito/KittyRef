@@ -3,7 +3,8 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
+using KittyRef.Core.Referee.Models.Events;
+using KittyRef.Core.Referee.Models.Requests;
 
 namespace KittyRef.Core.Referee.Models.Responses
 {
@@ -41,7 +42,7 @@ namespace KittyRef.Core.Referee.Models.Responses
         /// The maximum number of players in the room.
         /// <list type="bullet">
         /// <item>If 0 or missing, the room will allow an unlimited number of participants, but will not have enabled player slots.</item>
-        /// <item>If in the range [2, <see cref="KittyRef.Core.Referee.Models.Requests.MakeRoomRequest.MAX_PARTICIPANTS_LIMIT"/>] inclusive, the room will have the given number of slots to be occupied by participants.</item>
+        /// <item>If in the range [2, <see cref="MakeRoomRequest.MAX_PARTICIPANTS_LIMIT"/>] inclusive, the room will have the given number of slots to be occupied by participants.</item>
         /// </list>
         /// </summary>
         [JsonPropertyName("max_participants")]
@@ -49,7 +50,7 @@ namespace KittyRef.Core.Referee.Models.Responses
 
         /// <summary>
         /// The state of the room.
-        /// Includes the <see cref="Core.Models.MatchType"/>, as well as any additional information specific to that match type.
+        /// Includes the <see cref="MatchType"/>, as well as any additional information specific to that match type.
         /// </summary>
         public MatchState State { get; set; } = null!;
 
@@ -66,11 +67,6 @@ namespace KittyRef.Core.Referee.Models.Responses
         public Player[] Players { get; set; } = [];
 
         [JsonPropertyName("referees")]
-        public Core.Models.Referee[] Referees { get; set; } = [];
-
-        [JsonConstructor]
-        public RoomJoinedResponse()
-        {
-        }
+        public Events.Referee[] Referees { get; set; } = [];
     }
 }

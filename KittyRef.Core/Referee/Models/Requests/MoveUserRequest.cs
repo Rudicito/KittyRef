@@ -3,7 +3,6 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
 
 namespace KittyRef.Core.Referee.Models.Requests
 {
@@ -25,14 +24,14 @@ namespace KittyRef.Core.Referee.Models.Requests
         /// Only has effect if slots are active; attempting to specify a non-<see langword="null"/> team in a room without a participant count limit will throw.
         /// </summary>
         /// <seealso cref="MakeRoomRequest.MaxParticipants"/>
-        /// <seealso cref="Core.Models.RoomSettingsChangedEvent.MaxParticipants"/>
+        /// <seealso cref="Events.RoomSettingsChangedEvent.MaxParticipants"/>
         [JsonPropertyName("slot")]
         public byte? Slot { get; set; }
 
         /// <summary>
         /// The team to move the user to.
         /// Pass <see langword="null"/> to keep previous team.
-        /// Only has effect in <see cref="Core.Models.MatchType.TeamVersus"/>; attempting to specify a non-<see langword="null"/> team in other match types will throw.
+        /// Only has effect in <see cref="MatchType.TeamVersus"/>; attempting to specify a non-<see langword="null"/> team in other match types will throw.
         /// </summary>
         [JsonPropertyName("team")]
         public MatchTeam? Team { get; set; }

@@ -35,10 +35,5 @@ namespace KittyRef.Core.Referee.Models.Events
         /// </summary>
         [JsonPropertyName("result")]
         public uint Result { get; set; }
-
-        [JsonConstructor]
-        public RollCompletedEvent()
-        {
-        }
     }
 }

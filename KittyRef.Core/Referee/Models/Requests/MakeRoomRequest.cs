@@ -3,7 +3,6 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
 
 namespace KittyRef.Core.Referee.Models.Requests
 {
@@ -38,14 +37,14 @@ namespace KittyRef.Core.Referee.Models.Requests
 
         /// <summary>
         /// The match type to use.
-        /// Defaults to <see cref="Core.Models.MatchType.HeadToHead"/> if not supplied.
+        /// Defaults to <see cref="Models.MatchType.HeadToHead"/> if not supplied.
         /// </summary>
         [JsonPropertyName("type")]
         public MatchType MatchType { get; set; } = MatchType.HeadToHead;
 
         /// <summary>
         /// The queue mode to use.
-        /// Defaults to <see cref="Core.Models.QueueMode.HostOnly"/> if not supplied.
+        /// Defaults to <see cref="Models.QueueMode.HostOnly"/> if not supplied.
         /// </summary>
         [JsonPropertyName("queue_mode")]
         public QueueMode QueueMode { get; set; } = QueueMode.HostOnly;

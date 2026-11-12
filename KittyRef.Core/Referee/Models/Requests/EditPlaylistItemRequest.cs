@@ -10,7 +10,7 @@ namespace KittyRef.Core.Referee.Models.Requests
     /// Changes an existing playlist item.
     /// </summary>
     [PublicAPI]
-    public class EditPlaylistItemRequest : KittyRef.Core.Referee.Models.Requests.EditPlaylistItemRequestParameters
+    public class EditPlaylistItemRequest : EditPlaylistItemRequestParameters
     {
         /// <summary>
         /// The ID of the playlist item to change.

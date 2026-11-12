@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using KittyRef.Core.Common;
-using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Events;
 using Microsoft.Extensions.Logging;
 

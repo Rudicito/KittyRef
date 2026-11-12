@@ -3,7 +3,6 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
 
 namespace KittyRef.Core.Referee.Models.Requests
 {

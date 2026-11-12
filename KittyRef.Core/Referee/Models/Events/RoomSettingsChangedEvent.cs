@@ -3,8 +3,6 @@
 
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using KittyRef.Core.Models;
-using KittyRef.Core.Referee.Models.Requests;
 
 namespace KittyRef.Core.Referee.Models.Events
 {
@@ -50,7 +48,7 @@ namespace KittyRef.Core.Referee.Models.Events
         [JsonPropertyName("playlist_item_id")]
         public long PlaylistItemId { get; set; }
 
-        /// <inheritdoc cref="MakeRoomRequest.MaxParticipants"/>
+        /// <inheritdoc cref="Requests.MakeRoomRequest.MaxParticipants"/>
         [JsonPropertyName("max_participants")]
         public byte? MaxParticipants { get; set; }
     }

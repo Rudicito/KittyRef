@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using KittyRef.Core.Api;
 using KittyRef.Core.Common;
-using KittyRef.Core.Referee.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
