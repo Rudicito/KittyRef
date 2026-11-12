@@ -9,6 +9,8 @@ namespace KittyRef.Core.Models.Mods
         public abstract string Acronym  { get; }
         public abstract string Name { get; }
 
+        public abstract Ruleset Ruleset { get; }
+
         public abstract ModType Type { get; }
 
         public abstract IReadOnlyList<Type> IncompatibleMods { get; }

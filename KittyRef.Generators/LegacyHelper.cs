@@ -1,3 +1,6 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+
 using System;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Catch;
@@ -14,7 +17,7 @@ namespace KittyRef.Generators
 {
     public static class LegacyHelper
     {
-        public static Ruleset GetRulesetFromLegacyID(int id)
+        public static Ruleset GetRulesetFromLegacyId(int id)
         {
             switch (id)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using KittyRef.Generators.Mods;
+using JetBrains.Annotations;
+using KittyRef.Generators.Commands;
 using McMaster.Extensions.CommandLineUtils;
 using osu.Framework.Logging;
 
@@ -18,6 +19,7 @@ public class Program
         CommandLineApplication.Execute<Program>(args);
     }
 
+    [UsedImplicitly]
     public int OnExecute(CommandLineApplication app, IConsole console)
     {
         console.WriteLine("You must specify a subcommand.");

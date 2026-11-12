@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using KittyRef.Core.Models.Mods.Settings;
 
-namespace KittyRef.Core.Models.Mods.{{ m.ruleset }}
+namespace KittyRef.Core.Models.Mods.Rulesets.{{ m.ruleset }}
 {
     public class {{ m.class_name }} : Mod
     {
         public override string Acronym => "{{ m.acronym }}";
         public override string Name => "{{ m.name }}";
+
+        public override Ruleset Ruleset => Ruleset.{{ m.ruleset }};
 
         public override ModType Type => ModType.{{ m.type }};
 

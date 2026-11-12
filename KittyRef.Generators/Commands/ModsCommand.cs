@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,13 +17,13 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using Scriban;
 
-namespace KittyRef.Generators.Mods
+namespace KittyRef.Generators.Commands
 {
     [Command(Name = "mods", Description = "Generate C# classes of osu! mods")]
     public class ModsCommand
     {
         [Option("-o|--output <DIR>", "Output directory", CommandOptionType.SingleValue)]
-        public string OutputDir { get; set; } = "Generated";
+        public string OutputDir { get; set; } = "Generated/Mods";
 
         private const string path_file = "Templates/mod.sbn";
         private readonly Template template = Template.Parse(File.ReadAllText(path_file), path_file);
@@ -31,7 +32,7 @@ namespace KittyRef.Generators.Mods
         private int OnExecute()
         {
             var allRulesets = Enumerable.Range(0, ILegacyRuleset.MAX_LEGACY_RULESET_ID + 1)
-                .Select(LegacyHelper.GetRulesetFromLegacyID);
+                .Select(LegacyHelper.GetRulesetFromLegacyId);
 
             foreach (var ruleset in allRulesets)
                 getDefinitionsForRuleset(ruleset);
@@ -42,8 +43,7 @@ namespace KittyRef.Generators.Mods
         private void getDefinitionsForRuleset(Ruleset ruleset)
         {
             var allMods = ruleset.CreateAllMods().ToArray();
-
-            string rulesetName = ruleset.ShortName.ToPascalCase();
+            string rulesetName = ruleset.GetType().Name.Replace("Ruleset", string.Empty);
             string dir = Path.Combine(OutputDir, rulesetName);
 
             if (Directory.Exists(dir))
@@ -52,7 +52,7 @@ namespace KittyRef.Generators.Mods
 
             var mods = allMods.Select(mod => new
             {
-                Ruleset = ruleset.ShortName.ToPascalCase(),
+                Ruleset = rulesetName,
                 ClassName = mod.GetType().Name,
                 mod.Acronym,
                 mod.Name,
@@ -230,8 +230,13 @@ namespace KittyRef.Generators.Mods
             bool canBeNull
         ) where T : struct
         {
-            return $"NumberSetting(\"{name}\", \"{label}\", \"{description}\", {@default ?? null}, {minValue ?? null}, {maxValue ?? null}, {precision ?? null}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
+            return $"NumberSetting(\"{name}\", \"{label}\", \"{description}\", {fmt(@default)}, {fmt(minValue)}, {fmt(maxValue)}, {fmt(precision)}, {isInteger.ToString().ToLowerInvariant()}, {canBeNull.ToString().ToLowerInvariant()})";
         }
+
+        private static string fmt<T>(T? value) where T : struct
+            => value != null
+                ? Convert.ToString(value.Value, CultureInfo.InvariantCulture)!
+                : "null";
 
         private static readonly FieldInfo current_number_field =
             typeof(DifficultyBindable).GetField("CurrentNumber",
