@@ -1,6 +1,6 @@
 using System;
 
-namespace KittyRef.Core.Models.Mods.Settings;
+namespace KittyRef.Core.Models.Mods;
 
 public abstract record ModSetting(string Name, string Label, string Description);
 
