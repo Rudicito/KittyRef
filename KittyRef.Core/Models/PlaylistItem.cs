@@ -10,7 +10,7 @@ namespace KittyRef.Core.Models
         public long PlaylistItemId { get; internal set; }
 
         /// <summary>
-        /// The ID of the ruleinternal set of the playlist item.
+        /// The ID of the ruleset set of the playlist item.
         /// </summary>
         public int RulesetId { get; internal set; }
 
