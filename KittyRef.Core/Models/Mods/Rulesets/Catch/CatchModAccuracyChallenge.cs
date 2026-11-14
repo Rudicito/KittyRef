@@ -2,23 +2,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Mania
+namespace KittyRef.Core.Models.Mods.Rulesets.Catch
 {
-    public class ModAccuracyChallenge : Mod
+    public class CatchModAccuracyChallenge : Mod
     {
         public override string Acronym => "AC";
         public override string Name => "Accuracy Challenge";
 
-        public override Ruleset Ruleset => Ruleset.Mania;
+        public override Ruleset Ruleset => Ruleset.Catch;
 
         public override ModType Type => ModType.DifficultyIncrease;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(ManiaModEasy),
-            typeof(ManiaModNoFail),
-            typeof(ManiaModPerfect),
-            typeof(ManiaModCinema),
+            typeof(CatchModEasy),
+            typeof(CatchModNoFail),
+            typeof(CatchModPerfect),
+            typeof(CatchModCinema),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

@@ -33,5 +33,5 @@ public sealed record EnumSetting<T>(string Name, string Label, string Descriptio
     where T : struct, Enum
 {
     public Type EnumType => typeof(T);
-    object? IEnumSetting.DefaultValue => Default;
+    object IEnumSetting.DefaultValue => Default;
 }

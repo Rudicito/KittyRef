@@ -25,35 +25,49 @@ namespace KittyRef.Generators.Commands
         [Option("-o|--output <DIR>", "Output directory", CommandOptionType.SingleValue)]
         public string OutputDir { get; set; } = "Generated/Mods";
 
-        private const string path_file = "Templates/mod.sbn";
-        private readonly Template template = Template.Parse(File.ReadAllText(path_file), path_file);
+        private const string mod_path_file = "Templates/mod.sbn";
+        private readonly Template modTemplate = Template.Parse(File.ReadAllText(mod_path_file), mod_path_file);
+
+        private const string mod_catalog_path_file = "Templates/mod_catalog.sbn";
+        private readonly Template modCatalogTemplate = Template.Parse(File.ReadAllText(mod_catalog_path_file), mod_catalog_path_file);
 
         [UsedImplicitly]
         private int OnExecute()
         {
+            string dir = Path.Combine(OutputDir);
+
+            if (Directory.Exists(dir))
+                Directory.Delete(dir, recursive: true);
+
+            Directory.CreateDirectory(dir);
+
             var allRulesets = Enumerable.Range(0, ILegacyRuleset.MAX_LEGACY_RULESET_ID + 1)
                 .Select(LegacyHelper.GetRulesetFromLegacyId);
 
+            Dictionary<Ruleset, Mod[]> modsByRuleset = [];
             foreach (var ruleset in allRulesets)
-                getDefinitionsForRuleset(ruleset);
+            {
+                var rulesetAllMods = ruleset.CreateAllMods().ToArray();
+                getDefinitionsForRuleset(ruleset, rulesetAllMods);
+                modsByRuleset.Add(ruleset, rulesetAllMods);
+            }
+
+            createCatalogFile(modsByRuleset);
 
             return 0;
         }
 
-        private void getDefinitionsForRuleset(Ruleset ruleset)
+        private void getDefinitionsForRuleset(Ruleset ruleset, Mod[] allMods)
         {
-            var allMods = ruleset.CreateAllMods().ToArray();
-            string rulesetName = ruleset.GetType().Name.Replace("Ruleset", string.Empty);
-            string dir = Path.Combine(OutputDir, rulesetName);
+            string rulesetName = getRulesetName(ruleset);
+            string dir = Path.Combine(OutputDir, "Rulesets/" + rulesetName);
 
-            if (Directory.Exists(dir))
-                Directory.Delete(dir, recursive: true);
             Directory.CreateDirectory(dir);
 
             var mods = allMods.Select(mod => new
             {
                 Ruleset = rulesetName,
-                ClassName = mod.GetType().Name,
+                ClassName = getModClassName(ruleset, mod),
                 mod.Acronym,
                 mod.Name,
                 Description = mod.Description.ToString(),
@@ -74,7 +88,7 @@ namespace KittyRef.Generators.Commands
 
             void createClassFile(dynamic mod)
             {
-                string result = template.Render(new {m = mod});
+                string result = modTemplate.Render(new {m = mod});
 
                 string path = Path.Combine(dir, $"{mod.ClassName}.cs");
                 File.WriteAllText(path, result.ReplaceLineEndings("\n"));
@@ -85,7 +99,7 @@ namespace KittyRef.Generators.Commands
                 foreach (var mod in allMods)
                 {
                     if (incompatibleTypes.Any(t => t.IsInstanceOfType(mod)))
-                        yield return mod.GetType().Name ;
+                        yield return getModClassName(ruleset, mod);
                 }
             }
 
@@ -247,5 +261,30 @@ namespace KittyRef.Generators.Commands
             var current = (BindableFloat)current_number_field.GetValue(db)!;
             return current.Precision;
         }
+
+        private void createCatalogFile(Dictionary<Ruleset, Mod[]> modsByRuleset)
+        {
+            var modsNames = modsByRuleset.SelectMany(mr =>
+            {
+                var mods = mr.Value.Select(m => getModClassName(mr.Key, m));
+                return mods;
+            }).Order().ToList();
+
+            string result = modCatalogTemplate.Render(new {ModsNames = modsNames});
+
+            string path = Path.Combine(OutputDir, "ModCatalog.cs");
+            File.WriteAllText(path, result.ReplaceLineEndings("\n"));
+        }
+
+        private string getModClassName(Ruleset ruleset, Mod mod)
+        {
+            string originalModName = mod.GetType().Name;
+            string rulesetName = getRulesetName(ruleset);
+            string modNameWithoutRulesetName = originalModName.Replace(rulesetName, "");
+
+            return rulesetName + modNameWithoutRulesetName;
+        }
+
+        private string getRulesetName(Ruleset ruleset) => ruleset.GetType().Name.Replace("Ruleset", string.Empty);
     }
 }

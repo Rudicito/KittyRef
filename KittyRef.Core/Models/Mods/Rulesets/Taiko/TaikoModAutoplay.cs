@@ -18,7 +18,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModSingleTap),
             typeof(TaikoModCinema),
             typeof(TaikoModRelax),
-            typeof(ModAdaptiveSpeed),
+            typeof(TaikoModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

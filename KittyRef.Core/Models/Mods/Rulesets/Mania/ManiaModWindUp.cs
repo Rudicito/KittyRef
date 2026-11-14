@@ -2,24 +2,25 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Catch
+namespace KittyRef.Core.Models.Mods.Rulesets.Mania
 {
-    public class ModWindUp : Mod
+    public class ManiaModWindUp : Mod
     {
         public override string Acronym => "WU";
         public override string Name => "Wind Up";
 
-        public override Ruleset Ruleset => Ruleset.Catch;
+        public override Ruleset Ruleset => Ruleset.Mania;
 
         public override ModType Type => ModType.Fun;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(CatchModHalfTime),
-            typeof(CatchModDaycore),
-            typeof(CatchModDoubleTime),
-            typeof(CatchModNightcore),
-            typeof(ModWindDown),
+            typeof(ManiaModHalfTime),
+            typeof(ManiaModDaycore),
+            typeof(ManiaModDoubleTime),
+            typeof(ManiaModNightcore),
+            typeof(ManiaModWindDown),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

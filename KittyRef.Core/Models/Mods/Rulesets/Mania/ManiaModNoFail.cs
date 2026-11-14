@@ -17,7 +17,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
         [
             typeof(ManiaModSuddenDeath),
             typeof(ManiaModPerfect),
-            typeof(ModAccuracyChallenge),
+            typeof(ManiaModAccuracyChallenge),
             typeof(ManiaModCinema),
         ];
 

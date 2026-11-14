@@ -2,22 +2,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
+namespace KittyRef.Core.Models.Mods.Rulesets.Mania
 {
-    public class ModAccuracyChallenge : Mod
+    public class ManiaModAccuracyChallenge : Mod
     {
         public override string Acronym => "AC";
         public override string Name => "Accuracy Challenge";
 
-        public override Ruleset Ruleset => Ruleset.Taiko;
+        public override Ruleset Ruleset => Ruleset.Mania;
 
         public override ModType Type => ModType.DifficultyIncrease;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(TaikoModNoFail),
-            typeof(TaikoModPerfect),
-            typeof(TaikoModCinema),
+            typeof(ManiaModEasy),
+            typeof(ManiaModNoFail),
+            typeof(ManiaModPerfect),
+            typeof(ManiaModCinema),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

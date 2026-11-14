@@ -19,9 +19,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDaycore),
             typeof(OsuModDoubleTime),
             typeof(OsuModNightcore),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(OsuModWindUp),
+            typeof(OsuModWindDown),
+            typeof(OsuModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

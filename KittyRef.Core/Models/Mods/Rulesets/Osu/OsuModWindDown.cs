@@ -2,31 +2,31 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Mania
+namespace KittyRef.Core.Models.Mods.Rulesets.Osu
 {
-    public class ModWindUp : Mod
+    public class OsuModWindDown : Mod
     {
-        public override string Acronym => "WU";
-        public override string Name => "Wind Up";
+        public override string Acronym => "WD";
+        public override string Name => "Wind Down";
 
-        public override Ruleset Ruleset => Ruleset.Mania;
+        public override Ruleset Ruleset => Ruleset.Osu;
 
         public override ModType Type => ModType.Fun;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(ManiaModHalfTime),
-            typeof(ManiaModDaycore),
-            typeof(ManiaModDoubleTime),
-            typeof(ManiaModNightcore),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(OsuModHalfTime),
+            typeof(OsuModDaycore),
+            typeof(OsuModDoubleTime),
+            typeof(OsuModNightcore),
+            typeof(OsuModWindUp),
+            typeof(OsuModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>
         [
-            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 1.99, 0.01, false, false),
-            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 1.5, 0.51, 2, 0.01, false, false),
+            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.51, 2, 0.01, false, false),
+            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 0.75, 0.5, 1.99, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),
         ];
 

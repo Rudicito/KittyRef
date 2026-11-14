@@ -17,7 +17,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
         [
             typeof(TaikoModSuddenDeath),
             typeof(TaikoModPerfect),
-            typeof(ModAccuracyChallenge),
+            typeof(TaikoModAccuracyChallenge),
             typeof(TaikoModCinema),
         ];
 

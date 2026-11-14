@@ -19,8 +19,8 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModDaycore),
             typeof(CatchModDoubleTime),
             typeof(CatchModNightcore),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
+            typeof(CatchModWindUp),
+            typeof(CatchModWindDown),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

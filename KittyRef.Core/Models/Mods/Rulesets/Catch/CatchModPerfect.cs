@@ -17,7 +17,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
         [
             typeof(CatchModNoFail),
             typeof(CatchModSuddenDeath),
-            typeof(ModAccuracyChallenge),
+            typeof(CatchModAccuracyChallenge),
             typeof(CatchModCinema),
         ];
 

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Mania
 {
-    public class ModAdaptiveSpeed : Mod
+    public class ManiaModWindDown : Mod
     {
-        public override string Acronym => "AS";
-        public override string Name => "Adaptive Speed";
+        public override string Acronym => "WD";
+        public override string Name => "Wind Down";
 
         public override Ruleset Ruleset => Ruleset.Mania;
 
@@ -19,21 +19,20 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModDaycore),
             typeof(ManiaModDoubleTime),
             typeof(ManiaModNightcore),
-            typeof(ManiaModAutoplay),
-            typeof(ManiaModCinema),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
+            typeof(ManiaModWindUp),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>
         [
-            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 2, 0.01, false, false),
+            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.51, 2, 0.01, false, false),
+            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 0.75, 0.5, 1.99, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),
         ];
 
         public override bool UserPlayable => true;
-        public override bool ValidForMultiplayer => false;
-        public override bool ValidForFreestyleAsRequiredMod => false;
+        public override bool ValidForMultiplayer => true;
+        public override bool ValidForFreestyleAsRequiredMod => true;
         public override bool ValidForMultiplayerAsFreeMod => false;
         public override bool AlwaysValidForSubmission => false;
         public override bool Ranked => false;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
 {
-    public class ModScoreV2 : Mod
+    public class TaikoModScoreV2 : Mod
     {
         public override string Acronym => "SV2";
         public override string Name => "Score V2";

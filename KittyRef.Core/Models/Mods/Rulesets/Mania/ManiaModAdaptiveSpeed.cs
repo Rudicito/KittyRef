@@ -2,27 +2,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Osu
+namespace KittyRef.Core.Models.Mods.Rulesets.Mania
 {
-    public class ModAdaptiveSpeed : Mod
+    public class ManiaModAdaptiveSpeed : Mod
     {
         public override string Acronym => "AS";
         public override string Name => "Adaptive Speed";
 
-        public override Ruleset Ruleset => Ruleset.Osu;
+        public override Ruleset Ruleset => Ruleset.Mania;
 
         public override ModType Type => ModType.Fun;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(OsuModHalfTime),
-            typeof(OsuModDaycore),
-            typeof(OsuModDoubleTime),
-            typeof(OsuModNightcore),
-            typeof(OsuModAutoplay),
-            typeof(OsuModCinema),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
+            typeof(ManiaModHalfTime),
+            typeof(ManiaModDaycore),
+            typeof(ManiaModDoubleTime),
+            typeof(ManiaModNightcore),
+            typeof(ManiaModAutoplay),
+            typeof(ManiaModCinema),
+            typeof(ManiaModWindUp),
+            typeof(ManiaModWindDown),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

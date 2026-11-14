@@ -16,7 +16,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
             typeof(CatchModHardRock),
-            typeof(ModAccuracyChallenge),
+            typeof(CatchModAccuracyChallenge),
             typeof(CatchModDifficultyAdjust),
         ];
 

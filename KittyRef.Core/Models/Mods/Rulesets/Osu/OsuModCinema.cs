@@ -28,7 +28,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModSpunOut),
             typeof(OsuModMagnetised),
             typeof(OsuModRepel),
-            typeof(ModAdaptiveSpeed),
+            typeof(OsuModAdaptiveSpeed),
             typeof(OsuModTouchDevice),
         ];
 

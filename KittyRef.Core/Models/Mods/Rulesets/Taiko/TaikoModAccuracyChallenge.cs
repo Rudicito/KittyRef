@@ -2,23 +2,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Catch
+namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
 {
-    public class ModAccuracyChallenge : Mod
+    public class TaikoModAccuracyChallenge : Mod
     {
         public override string Acronym => "AC";
         public override string Name => "Accuracy Challenge";
 
-        public override Ruleset Ruleset => Ruleset.Catch;
+        public override Ruleset Ruleset => Ruleset.Taiko;
 
         public override ModType Type => ModType.DifficultyIncrease;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(CatchModEasy),
-            typeof(CatchModNoFail),
-            typeof(CatchModPerfect),
-            typeof(CatchModCinema),
+            typeof(TaikoModNoFail),
+            typeof(TaikoModPerfect),
+            typeof(TaikoModCinema),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>

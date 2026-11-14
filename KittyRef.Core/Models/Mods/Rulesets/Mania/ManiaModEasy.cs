@@ -16,7 +16,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
             typeof(ManiaModHardRock),
-            typeof(ModAccuracyChallenge),
+            typeof(ManiaModAccuracyChallenge),
             typeof(ManiaModDifficultyAdjust),
         ];
 

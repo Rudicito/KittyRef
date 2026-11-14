@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
 {
-    public class ModWindUp : Mod
+    public class TaikoModWindDown : Mod
     {
-        public override string Acronym => "WU";
-        public override string Name => "Wind Up";
+        public override string Acronym => "WD";
+        public override string Name => "Wind Down";
 
         public override Ruleset Ruleset => Ruleset.Taiko;
 
@@ -19,14 +19,14 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModDaycore),
             typeof(TaikoModDoubleTime),
             typeof(TaikoModNightcore),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(TaikoModWindUp),
+            typeof(TaikoModAdaptiveSpeed),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>
         [
-            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 1.99, 0.01, false, false),
-            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 1.5, 0.51, 2, 0.01, false, false),
+            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.51, 2, 0.01, false, false),
+            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 0.75, 0.5, 1.99, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),
         ];
 

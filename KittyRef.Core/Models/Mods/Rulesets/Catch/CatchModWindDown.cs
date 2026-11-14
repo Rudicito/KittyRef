@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Catch
 {
-    public class ModWindDown : Mod
+    public class CatchModWindDown : Mod
     {
         public override string Acronym => "WD";
         public override string Name => "Wind Down";
@@ -19,7 +19,7 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModDaycore),
             typeof(CatchModDoubleTime),
             typeof(CatchModNightcore),
-            typeof(ModWindUp),
+            typeof(CatchModWindUp),
         ];
 
         public override IReadOnlyList<ModSetting> Settings =>
