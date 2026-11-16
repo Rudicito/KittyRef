@@ -25,7 +25,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModMovingFast),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

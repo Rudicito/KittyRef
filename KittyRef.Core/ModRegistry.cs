@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KittyRef.Core.Models;
@@ -11,10 +12,12 @@ namespace KittyRef.Core
             .GroupBy(m => m.Ruleset)
             .ToDictionary(g => g.Key, g => g.ToArray());
 
-        public static Mod? FindByAcronym(Ruleset ruleset, string acronym)
-            => allMods[ruleset].FirstOrDefault(m => m.Acronym == acronym);
+        private static Mod createNew(this Mod mod) => (Mod)Activator.CreateInstance(mod.GetType(), nonPublic: true)!;
+
+        public static Mod? FindByAcronym(string acronym, Ruleset ruleset)
+            => allMods[ruleset].FirstOrDefault(m => m.Acronym == acronym)?.createNew();
 
         public static IEnumerable<Mod> GetForRuleset(Ruleset ruleset)
-            => allMods[ruleset];
+            => allMods[ruleset].Select(m => m.createNew());
     }
 }

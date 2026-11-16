@@ -24,7 +24,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("speed_change", "Speed decrease", "The actual decrease to apply", 0.75, 0.5, 0.99, 0.01, false, false),
         ];

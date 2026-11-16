@@ -32,7 +32,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModTouchDevice),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

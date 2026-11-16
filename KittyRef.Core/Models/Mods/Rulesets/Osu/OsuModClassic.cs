@@ -18,7 +18,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModStrictTracking),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("no_slider_head_accuracy", "No slider head accuracy requirement", "Scores sliders proportionally to the number of ticks hit.", true),
             new BoolSetting("classic_note_lock", "Apply classic note lock", "Applies note lock to the full hit window.", true),

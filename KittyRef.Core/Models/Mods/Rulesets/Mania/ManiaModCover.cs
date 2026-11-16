@@ -20,10 +20,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModFlashlight),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("coverage", "Coverage", "The proportion of playfield height that notes will be hidden for.", 0.5, 0.2, 0.8, 0.1, false, false),
-            new EnumSetting<CoverExpandDirection>("direction", "Direction", "The direction on which the cover is applied", CoverExpandDirection.AlongScroll),
+            new ChoiceSetting("direction", "Direction", "The direction on which the cover is applied", "AlongScroll", ["AlongScroll", "AgainstScroll"]),
         ];
 
         public override bool UserPlayable => true;

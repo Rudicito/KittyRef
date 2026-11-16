@@ -26,7 +26,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("attraction_strength", "Attraction strength", "How strong the pull is.", 0.5, 0.05, 1, 0.05, false, false),
         ];

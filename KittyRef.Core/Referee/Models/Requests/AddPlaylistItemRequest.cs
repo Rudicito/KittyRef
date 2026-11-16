@@ -29,13 +29,13 @@ namespace KittyRef.Core.Referee.Models.Requests
         /// The required mods of the new playlist item.
         /// </summary>
         [JsonPropertyName("required_mods")]
-        public IEnumerable<Mod> RequiredMods { get; set; } = [];
+        public IEnumerable<ModDto> RequiredMods { get; set; } = [];
 
         /// <summary>
         /// The allowed mods of the new playlist item.
         /// </summary>
         [JsonPropertyName("allowed_mods")]
-        public IEnumerable<Mod> AllowedMods { get; set; } = [];
+        public IEnumerable<ModDto> AllowedMods { get; set; } = [];
 
         /// <summary>
         /// The new freestyle state of the playlist item.

@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
 
@@ -32,7 +33,7 @@ namespace KittyRef.Core.Referee
         /// <list type="bullet">
         /// <item>a random password,</item>
         /// <item><see cref="MatchType.HeadToHead"></see> match type,</item>
-        /// <item><see cref="osu.Game.Online.Multiplayer.QueueMode.HostOnly">host-only</see> queue mode,</item>
+        /// <item><see cref="QueueMode">host-only</see> queue mode,</item>
         /// <item>automatic intro skip enabled</item>
         /// </list>
         /// by default.

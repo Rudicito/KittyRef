@@ -21,7 +21,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("fail_on_slider_tail", "Also fail when missing a slider tail", "", false),
             new BoolSetting("restart", "Restart on fail", "Automatically restarts when failed.", false),

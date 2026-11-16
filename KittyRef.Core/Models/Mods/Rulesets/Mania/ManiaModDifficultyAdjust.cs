@@ -19,7 +19,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModHardRock),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("overall_difficulty", "Accuracy", "Override a beatmap's set OD.", 5, -15, 15, 0.1, false, false),
             new NumberSetting("drain_rate", "HP Drain", "Override a beatmap's set HP.", 5, 0, 11, 0.1, false, false),

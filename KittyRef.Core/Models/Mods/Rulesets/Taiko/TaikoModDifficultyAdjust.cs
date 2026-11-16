@@ -19,7 +19,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModHardRock),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("scroll_speed", "Scroll Speed", "Adjust a beatmap's set scroll speed", 5, 0.25, 4, 0.05, false, false),
             new NumberSetting("drain_rate", "HP Drain", "Override a beatmap's set HP.", 5, 0, 11, 0.1, false, false),

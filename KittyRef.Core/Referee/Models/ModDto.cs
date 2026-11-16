@@ -11,7 +11,7 @@ namespace KittyRef.Core.Referee.Models
     /// Represents a configured mod.
     /// </summary>
     [PublicAPI]
-    public class Mod
+    public class ModDto
     {
         /// <summary>
         /// The acronym of the mod.

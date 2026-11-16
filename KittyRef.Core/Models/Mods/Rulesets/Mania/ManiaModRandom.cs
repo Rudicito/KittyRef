@@ -17,7 +17,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
         [
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("seed", "Seed", "Use a custom seed instead of a random one", null, null, null, null, true, true),
         ];

@@ -10,7 +10,7 @@ namespace KittyRef.Core.Referee.Models.Events
     /// Represents a player in the room.
     /// </summary>
     [PublicAPI]
-    public class Player
+    public class PlayerDto
     {
         /// <summary>
         /// The ID of the player.
@@ -27,7 +27,7 @@ namespace KittyRef.Core.Referee.Models.Events
 
         /// <summary>
         /// The player's current selected style.
-        /// Only applicable if the current <see cref="PlaylistItem"/> enabled <see cref="PlaylistItem.Freestyle"/>.
+        /// Only applicable if the current <see cref="PlaylistItemDto"/> enabled <see cref="PlaylistItemDto.Freestyle"/>.
         /// </summary>
         /// <seealso cref="IRefereeHubClient.UserStyleChanged"/>
         [JsonPropertyName("style")]
@@ -35,11 +35,11 @@ namespace KittyRef.Core.Referee.Models.Events
 
         /// <summary>
         /// The player's current selected mods.
-        /// Only applicable if the current <see cref="PlaylistItem"/> specifies any <see cref="PlaylistItem.AllowedMods"/>.
+        /// Only applicable if the current <see cref="PlaylistItemDto"/> specifies any <see cref="PlaylistItemDto.AllowedMods"/>.
         /// </summary>
         /// <seealso cref="IRefereeHubClient.UserModsChanged"/>
         [JsonPropertyName("mods")]
-        public Mod[] UserMods { get; set; } = [];
+        public ModDto[] UserMods { get; set; } = [];
 
         /// <summary>
         /// The player's current team.

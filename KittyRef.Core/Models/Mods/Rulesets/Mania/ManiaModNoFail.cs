@@ -21,7 +21,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

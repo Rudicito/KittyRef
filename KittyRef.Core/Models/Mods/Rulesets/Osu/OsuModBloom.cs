@@ -20,7 +20,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModTouchDevice),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("max_size_combo_count", "Max size at combo", "The combo count at which the cursor reaches its maximum size", 50, 5, 100, 1, true, false),
             new NumberSetting("max_cursor_size", "Final size multiplier", "The multiplier applied to cursor size when combo reaches maximum", 10, 5, 15, 0.5, false, false),

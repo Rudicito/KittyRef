@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
+using KittyRef.Core.Referee.Models.Mapping;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
 
@@ -81,11 +82,25 @@ public class Room
     /// </summary>
     public QueueMode QueueMode { get; internal set; }
 
-    public List<PlaylistItem> Playlist { get; internal set; } = [];
+    public IReadOnlyList<PlaylistItem> Playlist => playlist;
 
-    public List<Player> Players { get; internal set; } = [];
+    internal List<PlaylistItem> playlist = [];
 
-    public List<Models.Referee> Referees { get; internal set; } = [];
+    public IReadOnlyList<PlaylistItem> BeatmapQueue => Playlist.Where(i => !i.WasPlayed).OrderBy(i => i.Order).ToList();
+
+    public PlaylistItem? CurrentBeatmap => BeatmapQueue.Count > 0 ? BeatmapQueue[0] : null;
+
+    public IReadOnlyList<Player> Players => players;
+
+    internal List<Player> players = [];
+
+    public IReadOnlyList<User> Referees => referees;
+
+    internal List<User> referees = [];
+
+    public IReadOnlyList<User> BannedUsers => bannedUsers;
+
+    internal List<User> bannedUsers = [];
 
     /// <summary>
     /// Trigger at each property modification
@@ -108,22 +123,26 @@ public class Room
         Name = response.Name;
         Password = response.Password;
         MaxParticipants = response.MaxParticipants;
-        Type = response.State.Type;
-        Locked = response.State.Locked;
-        Slots = response.State.Slots;
+        Type = response.StateDto.Type;
+        Locked = response.StateDto.Locked;
+        Slots = response.StateDto.Slots;
         QueueMode = response.QueueMode;
-        Playlist = response.Playlist.ToList();
-        Players = response.Players.ToList();
-        Referees = response.Referees.ToList();
+        referees = response.Referees.Select(RefereeMapping.FromDto).ToList();
+
+        playlist = response.Playlist.Select(PlaylistItemMapping.FromDto).ToList();
+
+        var currentRuleset = Playlist.Where(pi => !pi.WasPlayed).MinBy(pi => pi.Order)?.Ruleset;
+
+        players = response.Players.Select(m => m.FromDto(currentRuleset)).ToList();
     }
 
     #region Helper methods
 
     public PlaylistItem? GetPlaylistItem(long playlistItemId) => Playlist.FirstOrDefault(p => p.PlaylistItemId == playlistItemId);
 
-    public Player? GetPlayer(long userId) => Players.FirstOrDefault(p => p.UserId == userId);
+    public Player? GetPlayer(long userId) => players.FirstOrDefault(p => p.UserId == userId);
 
-    public Models.Referee? GetReferee(long userId) => Referees.FirstOrDefault(r => r.UserId == userId);
+    public Models.Referee? GetReferee(long userId) => referees.FirstOrDefault(r => r.UserId == userId);
 
     #endregion
 

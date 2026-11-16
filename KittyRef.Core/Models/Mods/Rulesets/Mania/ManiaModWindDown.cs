@@ -23,7 +23,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.51, 2, 0.01, false, false),
             new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 0.75, 0.5, 1.99, 0.01, false, false),

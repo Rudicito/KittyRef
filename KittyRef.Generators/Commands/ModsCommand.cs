@@ -207,10 +207,10 @@ namespace KittyRef.Generators.Commands
 
                             string enumName = bdType.Name;
                             var enumValueList = bdType.GetEnumNames().ToList();
-                            Debug.Assert(enumValueList.Count > 0);
-                            object? enumDefault = bdP.GetProperty("Default")!.GetValue(bindable);
+                            string enumDefault = bdP.GetProperty("Default")!.GetValue(bindable)!.ToString()!;
+                            string enumValueStringList = string.Join(", ", enumValueList.Select(s => $"\"{s}\""));
 
-                            type = $"EnumSetting<{enumName}>(\"{name}\", \"{label}\", \"{description}\", {enumName}.{enumDefault})";
+                            type = $"ChoiceSetting(\"{name}\", \"{label}\", \"{description}\", \"{enumDefault}\", [{enumValueStringList}])";
 
                             enumSetting = new
                             {

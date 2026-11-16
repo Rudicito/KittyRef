@@ -25,7 +25,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModWindDown),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 2, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),

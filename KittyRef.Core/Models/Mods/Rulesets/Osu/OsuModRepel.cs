@@ -25,7 +25,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("repulsion_strength", "Repulsion strength", "How strong the repulsion is.", 0.5, 0.05, 1, 0.05, false, false),
         ];

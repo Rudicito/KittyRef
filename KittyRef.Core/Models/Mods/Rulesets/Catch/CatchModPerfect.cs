@@ -21,7 +21,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("restart", "Restart on fail", "Automatically restarts when failed.", true),
         ];

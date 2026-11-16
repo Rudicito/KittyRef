@@ -22,6 +22,6 @@ namespace KittyRef.Core.Referee.Models.Events
         /// The updated state of the room.
         /// </summary>
         [JsonPropertyName("state")]
-        public MatchState State { get; set; } = null!;
+        public MatchStateDto StateDto { get; set; } = null!;
     }
 }

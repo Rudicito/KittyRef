@@ -21,10 +21,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("minimum_accuracy", "Minimum accuracy", "Trigger a failure if your accuracy goes below this value.", 0.9, 0.6, 0.999, 0.001, false, false),
-            new EnumSetting<AccuracyMode>("accuracy_judge_mode", "Accuracy mode", "The mode of accuracy that will trigger failure.", AccuracyMode.MaximumAchievable),
+            new ChoiceSetting("accuracy_judge_mode", "Accuracy mode", "The mode of accuracy that will trigger failure.", "MaximumAchievable", ["MaximumAchievable", "Standard"]),
             new BoolSetting("restart", "Restart on fail", "Automatically restarts when failed.", false),
         ];
 

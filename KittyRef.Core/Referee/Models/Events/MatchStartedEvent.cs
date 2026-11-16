@@ -44,7 +44,7 @@ namespace KittyRef.Core.Referee.Models.Events
         /// Keys are user IDs, values are the indices of the slots taken by those users.
         /// Only applicable if a participant count limit is active.
         /// </summary>
-        /// <seealso cref="MatchState.Slots"/>
+        /// <seealso cref="MatchStateDto.Slots"/>
         [JsonPropertyName("slots")]
         public Dictionary<int, byte>? Slots { get; init; }
     }

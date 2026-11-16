@@ -19,7 +19,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModBloom),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("follow_delay", "Follow delay", "Milliseconds until the flashlight reaches the cursor", 120, 120, 1200, 120, false, false),
             new NumberSetting("size_multiplier", "Flashlight size", "Multiplier applied to the default flashlight size.", 1, 0.5, 2, 0.1, false, false),

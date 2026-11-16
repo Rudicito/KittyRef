@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
+using KittyRef.Core.Referee.Models.Mapping;
+using Player = KittyRef.Core.Models.Player;
 
 namespace KittyRef.Core;
 
@@ -82,7 +84,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.Players.Add(new Player
+            room.players.Add(new Player
             {
                 UserId = (int)e.UserId
             });
@@ -94,7 +96,7 @@ public class RoomManager
         updateRoom(e.RoomId, room =>
         {
             var player = room.GetPlayer(e.UserId);
-            if (player != null) room.Players.Remove(player);
+            if (player != null) room.players.Remove(player);
         });
     }
 
@@ -103,17 +105,19 @@ public class RoomManager
         updateRoom(e.RoomId, room =>
         {
             var player = room.GetPlayer(e.KickedUserId);
-            if (player != null) room.Players.Remove(player);
+            if (player != null) room.players.Remove(player);
         });
     }
 
-    //todo: add banned players list in Room
     private void onUserBanned(UserBannedEvent e)
     {
         updateRoom(e.RoomId, room =>
         {
-            var player = room.GetPlayer(e.BannedUserId);
-            if (player != null) room.Players.Remove(player);
+            room.bannedUsers.Add(new User
+            {
+                UserId = (int)e.BannedUserId
+                //todo: add username
+            });
         });
     }
 
@@ -121,9 +125,10 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.Referees.Add(new Models.Referee
+            room.referees.Add(new User
             {
                 UserId = e.UserId
+                //todo: add username
             });
         });
     }
@@ -132,8 +137,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            var referee = room.Referees.FirstOrDefault(r => r.UserId == e.UserId);
-            if (referee != null) room.Referees.Remove(referee);
+            var referee = room.referees.FirstOrDefault(r => r.UserId == e.UserId);
+            if (referee != null) room.referees.Remove(referee);
         });
     }
 
@@ -152,7 +157,6 @@ public class RoomManager
             room.Password = e.Password;
             room.Type = e.Type;
             room.QueueMode = e.QueueMode;
-            //todo: use e.PlaylistItemId
             room.MaxParticipants = e.MaxParticipants;
         });
     }
@@ -161,9 +165,9 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.Type = e.State.Type;
-            room.Locked = e.State.Locked;
-            room.Slots = e.State.Slots?.ToArray();
+            room.Type = e.StateDto.Type;
+            room.Locked = e.StateDto.Locked;
+            room.Slots = e.StateDto.Slots?.ToArray();
         });
     }
 
@@ -171,7 +175,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.Playlist.Add(e.PlaylistItem);
+            room.playlist.Add(e.PlaylistItemDto.FromDto());
         });
     }
 
@@ -179,17 +183,18 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            var i = e.PlaylistItem;
-            var playlistItem = room.GetPlaylistItem(i.PlaylistItemId);
-            if (playlistItem == null) return;
+            var dto = e.PlaylistItemDto;
+            var newPi = e.PlaylistItemDto.FromDto();
+            var pi = room.GetPlaylistItem(dto.PlaylistItemId);
+            if (pi == null) return;
 
-            playlistItem.RulesetId = i.RulesetId;
-            playlistItem.BeatmapId = i.BeatmapId;
-            playlistItem.RequiredMods = i.RequiredMods.ToArray();
-            playlistItem.AllowedMods = i.AllowedMods.ToArray();
-            playlistItem.WasPlayed = i.WasPlayed;
-            playlistItem.Freestyle = i.Freestyle;
-            playlistItem.Order = i.Order;
+            pi.Ruleset = newPi.Ruleset;
+            pi.BeatmapId = newPi.BeatmapId;
+            pi.requiredMods = newPi.requiredMods;
+            pi.allowedMods = newPi.allowedMods;
+            pi.Freestyle = newPi.Freestyle;
+            pi.WasPlayed = newPi.WasPlayed;
+            pi.Order = newPi.Order;
         });
     }
 
@@ -198,7 +203,7 @@ public class RoomManager
         updateRoom(e.RoomId, room =>
         {
             var playlistItem = room.GetPlaylistItem(e.PlaylistItemId);
-            if (playlistItem != null) room.Playlist.Remove(playlistItem);
+            if (playlistItem != null) room.playlist.Remove(playlistItem);
         });
     }
 
@@ -213,7 +218,7 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            var player = room.Players.FirstOrDefault(p => p.UserId == e.UserId);
+            var player = room.GetPlayer(e.UserId);
             player?.Status = e.Status;
         });
     }
@@ -222,8 +227,11 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var ruleset = room.CurrentBeatmap?.Ruleset
+                          ?? throw new Exception("User mods changed while Beatmap queue empty.");
+
             var player = room.GetPlayer(e.UserId);
-            player?.UserMods = e.UserMods.ToArray();
+            player?.UserMods = e.UserMods.Select(m => m.FromDto(ruleset)).ToList();
         });
     }
 
@@ -234,8 +242,8 @@ public class RoomManager
             var player = room.GetPlayer(e.UserId);
             if (player == null) return;
 
-            player.Style.RulesetId = e.RulesetId;
-            player.Style.BeatmapId = e.BeatmapId;
+            player.Ruleset = e.RulesetId == null ? null : RulesetMapping.ToRuleset(e.RulesetId.Value);
+            player.BeatmapId = e.BeatmapId;
         });
     }
 

@@ -52,7 +52,7 @@ namespace KittyRef.Core.Referee.Models.Responses
         /// The state of the room.
         /// Includes the <see cref="MatchType"/>, as well as any additional information specific to that match type.
         /// </summary>
-        public MatchState State { get; set; } = null!;
+        public MatchStateDto StateDto { get; set; } = null!;
 
         /// <summary>
         /// The current queue mode of the room.
@@ -61,12 +61,12 @@ namespace KittyRef.Core.Referee.Models.Responses
         public QueueMode QueueMode { get; set; }
 
         [JsonPropertyName("playlist")]
-        public PlaylistItem[] Playlist { get; set; } = [];
+        public PlaylistItemDto[] Playlist { get; set; } = [];
 
         [JsonPropertyName("players")]
-        public Player[] Players { get; set; } = [];
+        public PlayerDto[] Players { get; set; } = [];
 
         [JsonPropertyName("referees")]
-        public Events.Referee[] Referees { get; set; } = [];
+        public RefereeDto[] Referees { get; set; } = [];
     }
 }

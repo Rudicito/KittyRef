@@ -24,7 +24,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("speed_change", "Speed increase", "The actual increase to apply", 1.5, 1.01, 2, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", false),

@@ -22,6 +22,6 @@ namespace KittyRef.Core.Referee.Models.Events
         /// The playlist item that was changed.
         /// </summary>
         [JsonPropertyName("playlist_item")]
-        public PlaylistItem PlaylistItem { get; set; } = null!;
+        public PlaylistItemDto PlaylistItemDto { get; set; } = null!;
     }
 }

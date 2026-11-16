@@ -21,7 +21,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("strength", "Strength", "Multiplier applied to the wiggling strength.", 1, 0.10000000149011612, 2, 0.10000000149011612, false, false),
         ];

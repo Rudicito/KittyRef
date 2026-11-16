@@ -10,7 +10,7 @@ namespace KittyRef.Core.Referee.Models.Events
     /// Represents a playlist item.
     /// </summary>
     [PublicAPI]
-    public class PlaylistItem
+    public class PlaylistItemDto
     {
         /// <summary>
         /// The ID of the playlist item.
@@ -34,13 +34,13 @@ namespace KittyRef.Core.Referee.Models.Events
         /// The mods required by this playlist item.
         /// </summary>
         [JsonPropertyName("required_mods")]
-        public Mod[] RequiredMods { get; set; } = [];
+        public ModDto[] RequiredMods { get; set; } = [];
 
         /// <summary>
         /// The mods allowed for player selection by this playlist item.
         /// </summary>
         [JsonPropertyName("allowed_mods")]
-        public Mod[] AllowedMods { get; set; } = [];
+        public ModDto[] AllowedMods { get; set; } = [];
 
         /// <summary>
         /// Whether this playlist item permits players to freestyle.

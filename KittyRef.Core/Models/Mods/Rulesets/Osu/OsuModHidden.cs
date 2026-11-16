@@ -22,7 +22,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("only_fade_approach_circles", "Only fade approach circles", "The main object body will not fade when enabled.", false),
         ];
