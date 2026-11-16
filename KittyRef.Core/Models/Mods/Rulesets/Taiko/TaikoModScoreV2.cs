@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Osu
+namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
 {
-    public class ModScoreV2 : Mod
+    public class TaikoModScoreV2 : Mod
     {
         public override string Acronym => "SV2";
         public override string Name => "Score V2";
 
-        public override Ruleset Ruleset => Ruleset.Osu;
+        public override Ruleset Ruleset => Ruleset.Taiko;
 
         public override ModType Type => ModType.System;
 
@@ -17,7 +17,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
         [
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

@@ -20,7 +20,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModTargetPractice),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("circle_size", "Circle Size", "Override a beatmap's set CS.", 5, 0, 11, 0.1, false, false),
             new NumberSetting("approach_rate", "Approach Rate", "Override a beatmap's set AR.", 5, -10, 11, 0.1, false, false),

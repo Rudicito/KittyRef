@@ -18,7 +18,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModBloom),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("hidden_combo_count", "Hidden at combo", "The combo count at which the cursor becomes completely hidden", 10, 0, 50, 1, true, false),
         ];

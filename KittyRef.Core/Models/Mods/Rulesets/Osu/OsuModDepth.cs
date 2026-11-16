@@ -29,7 +29,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("max_depth", "Maximum depth", "How far away objects appear.", 100, 50, 200, 10, false, false),
             new BoolSetting("show_approach_circles", "Show Approach Circles", "Whether approach circles should be visible.", true),

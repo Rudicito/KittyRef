@@ -18,10 +18,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModBubbles),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("spin_speed", "Roll speed", "Rotations per minute", 0.5, 0.02, 12, 0.01, false, false),
-            new EnumSetting<RotationDirection>("direction", "Direction", "The direction of rotation", RotationDirection.Clockwise),
+            new ChoiceSetting("direction", "Direction", "The direction of rotation", "Clockwise", ["Clockwise", "Counterclockwise"]),
         ];
 
         public override bool UserPlayable => true;

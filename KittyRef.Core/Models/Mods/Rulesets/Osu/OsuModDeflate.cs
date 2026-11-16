@@ -23,7 +23,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDepth),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("start_scale", "Starting Size", "The initial size multiplier applied to all objects.", 2, 1, 25, 0.1, false, false),
         ];

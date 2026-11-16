@@ -18,15 +18,17 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModNoFail),
             typeof(TaikoModSuddenDeath),
             typeof(TaikoModPerfect),
-            typeof(ModAccuracyChallenge),
+            typeof(TaikoModAccuracyChallenge),
             typeof(TaikoModSingleTap),
             typeof(TaikoModAutoplay),
             typeof(TaikoModCinema),
             typeof(TaikoModRelax),
-            typeof(ModAdaptiveSpeed),
+            typeof(TaikoModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

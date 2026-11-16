@@ -17,7 +17,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
         [
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("one_third_conversion", "1/3 to 1/2 conversion", "Converts 1/3 patterns to 1/2 rhythm.", false),
             new BoolSetting("one_sixth_conversion", "1/6 to 1/4 conversion", "Converts 1/6 patterns to 1/4 rhythm.", true),

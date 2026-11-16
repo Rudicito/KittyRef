@@ -18,7 +18,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModTargetPractice),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("angle_sharpness", "Angle sharpness", "How sharp angles should be", 7, 1, 10, 0.1, false, false),
             new NumberSetting("seed", "Seed", "Use a custom seed instead of a random one", null, null, null, null, true, true),

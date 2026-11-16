@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Osu
 {
-    public class ModWindUp : Mod
+    public class OsuModWindDown : Mod
     {
-        public override string Acronym => "WU";
-        public override string Name => "Wind Up";
+        public override string Acronym => "WD";
+        public override string Name => "Wind Down";
 
         public override Ruleset Ruleset => Ruleset.Osu;
 
@@ -19,14 +19,16 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDaycore),
             typeof(OsuModDoubleTime),
             typeof(OsuModNightcore),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(OsuModWindUp),
+            typeof(OsuModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
-            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 1.99, 0.01, false, false),
-            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 1.5, 0.51, 2, 0.01, false, false),
+            new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.51, 2, 0.01, false, false),
+            new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 0.75, 0.5, 1.99, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),
         ];
 

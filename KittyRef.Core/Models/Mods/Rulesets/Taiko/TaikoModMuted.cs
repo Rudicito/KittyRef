@@ -17,7 +17,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
         [
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("inverse_muting", "Start muted", "Increase volume as combo builds.", false),
             new BoolSetting("enable_metronome", "Enable metronome", "Add a metronome beat to help you keep track of the rhythm.", true),

@@ -29,6 +29,6 @@ namespace KittyRef.Core.Referee.Models.Events
         /// Note that these do NOT contain any mods required by the current playlist item.
         /// </summary>
         [JsonPropertyName("mods")]
-        public Mod[] UserMods { get; set; } = [];
+        public ModDto[] UserMods { get; set; } = [];
     }
 }

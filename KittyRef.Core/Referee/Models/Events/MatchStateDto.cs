@@ -11,7 +11,7 @@ namespace KittyRef.Core.Referee.Models.Events
     /// Contains the current state of the room.
     /// </summary>
     [PublicAPI]
-    public class MatchState
+    public class MatchStateDto
     {
         /// <summary>
         /// The current match type.

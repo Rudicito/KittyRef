@@ -2,28 +2,30 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
+namespace KittyRef.Core.Models.Mods.Rulesets.Mania
 {
-    public class ModWindUp : Mod
+    public class ManiaModWindUp : Mod
     {
         public override string Acronym => "WU";
         public override string Name => "Wind Up";
 
-        public override Ruleset Ruleset => Ruleset.Taiko;
+        public override Ruleset Ruleset => Ruleset.Mania;
 
         public override ModType Type => ModType.Fun;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(TaikoModHalfTime),
-            typeof(TaikoModDaycore),
-            typeof(TaikoModDoubleTime),
-            typeof(TaikoModNightcore),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(ManiaModHalfTime),
+            typeof(ManiaModDaycore),
+            typeof(ManiaModDoubleTime),
+            typeof(ManiaModNightcore),
+            typeof(ManiaModWindDown),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 1.99, 0.01, false, false),
             new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 1.5, 0.51, 2, 0.01, false, false),

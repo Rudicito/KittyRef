@@ -19,12 +19,14 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModDaycore),
             typeof(TaikoModDoubleTime),
             typeof(TaikoModNightcore),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(TaikoModWindUp),
+            typeof(TaikoModWindDown),
+            typeof(TaikoModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("speed_change", "Speed decrease", "The actual decrease to apply", 0.75, 0.5, 0.99, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", false),

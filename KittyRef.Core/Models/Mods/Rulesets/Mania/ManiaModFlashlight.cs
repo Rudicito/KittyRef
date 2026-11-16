@@ -20,7 +20,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModCover),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("size_multiplier", "Flashlight size", "Multiplier applied to the default flashlight size.", 1, 0.5, 3, 0.1, false, false),
             new BoolSetting("combo_based_size", "Change size based on combo", "Decrease the flashlight size as combo increases.", false),

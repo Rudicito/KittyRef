@@ -23,10 +23,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModFreezeFrame),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("scale", "Initial size", "Change the initial size of the approach circle, relative to hit circles.", 4, 1.5, 10, 0.1, false, false),
-            new EnumSetting<AnimationStyle>("style", "Style", "Change the animation style of the approach circles.", AnimationStyle.Gravity),
+            new ChoiceSetting("style", "Style", "Change the animation style of the approach circles.", "Gravity", ["Linear", "Gravity", "InOut1", "InOut2", "Accelerate1", "Accelerate2", "Accelerate3", "Decelerate1", "Decelerate2", "Decelerate3"]),
         ];
 
         public override bool UserPlayable => true;

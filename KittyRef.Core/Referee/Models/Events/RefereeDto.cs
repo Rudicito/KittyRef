@@ -10,7 +10,7 @@ namespace KittyRef.Core.Referee.Models.Events
     /// Represents a referee in the room.
     /// </summary>
     [PublicAPI]
-    public class Referee
+    public class RefereeDto
     {
         /// <summary>
         /// The ID of the referee.

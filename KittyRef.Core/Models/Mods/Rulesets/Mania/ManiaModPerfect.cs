@@ -17,11 +17,13 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
         [
             typeof(ManiaModNoFail),
             typeof(ManiaModSuddenDeath),
-            typeof(ModAccuracyChallenge),
+            typeof(ManiaModAccuracyChallenge),
             typeof(ManiaModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new BoolSetting("require_perfect_hits", "Require perfect hits", "", false),
             new BoolSetting("restart", "Restart on fail", "Automatically restarts when failed.", true),

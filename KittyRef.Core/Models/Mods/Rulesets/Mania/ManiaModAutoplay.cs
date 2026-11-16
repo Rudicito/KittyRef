@@ -16,10 +16,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
             typeof(ManiaModCinema),
-            typeof(ModAdaptiveSpeed),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

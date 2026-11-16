@@ -18,13 +18,15 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModNoFail),
             typeof(ManiaModSuddenDeath),
             typeof(ManiaModPerfect),
-            typeof(ModAccuracyChallenge),
+            typeof(ManiaModAccuracyChallenge),
             typeof(ManiaModAutoplay),
             typeof(ManiaModCinema),
-            typeof(ModAdaptiveSpeed),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

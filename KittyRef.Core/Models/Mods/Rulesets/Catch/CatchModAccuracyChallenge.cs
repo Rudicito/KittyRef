@@ -2,28 +2,31 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
+namespace KittyRef.Core.Models.Mods.Rulesets.Catch
 {
-    public class ModAccuracyChallenge : Mod
+    public class CatchModAccuracyChallenge : Mod
     {
         public override string Acronym => "AC";
         public override string Name => "Accuracy Challenge";
 
-        public override Ruleset Ruleset => Ruleset.Taiko;
+        public override Ruleset Ruleset => Ruleset.Catch;
 
         public override ModType Type => ModType.DifficultyIncrease;
 
         public override IReadOnlyList<Type> IncompatibleMods =>
         [
-            typeof(TaikoModNoFail),
-            typeof(TaikoModPerfect),
-            typeof(TaikoModCinema),
+            typeof(CatchModEasy),
+            typeof(CatchModNoFail),
+            typeof(CatchModPerfect),
+            typeof(CatchModCinema),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("minimum_accuracy", "Minimum accuracy", "Trigger a failure if your accuracy goes below this value.", 0.9, 0.6, 0.999, 0.001, false, false),
-            new EnumSetting<AccuracyMode>("accuracy_judge_mode", "Accuracy mode", "The mode of accuracy that will trigger failure.", AccuracyMode.MaximumAchievable),
+            new ChoiceSetting("accuracy_judge_mode", "Accuracy mode", "The mode of accuracy that will trigger failure.", "MaximumAchievable", ["MaximumAchievable", "Standard"]),
             new BoolSetting("restart", "Restart on fail", "Automatically restarts when failed.", false),
         ];
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
 {
-    public class ModAdaptiveSpeed : Mod
+    public class TaikoModAdaptiveSpeed : Mod
     {
         public override string Acronym => "AS";
         public override string Name => "Adaptive Speed";
@@ -21,11 +21,13 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Taiko
             typeof(TaikoModNightcore),
             typeof(TaikoModAutoplay),
             typeof(TaikoModCinema),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
+            typeof(TaikoModWindUp),
+            typeof(TaikoModWindDown),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 2, 0.01, false, false),
             new BoolSetting("adjust_pitch", "Adjust pitch", "Should pitch be adjusted with speed", true),

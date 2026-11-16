@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KittyRef.Core.Models.Mods.Rulesets.Catch
 {
-    public class ModWindUp : Mod
+    public class CatchModWindUp : Mod
     {
         public override string Acronym => "WU";
         public override string Name => "Wind Up";
@@ -19,10 +19,12 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModDaycore),
             typeof(CatchModDoubleTime),
             typeof(CatchModNightcore),
-            typeof(ModWindDown),
+            typeof(CatchModWindDown),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("initial_rate", "Initial rate", "The starting speed of the track", 1, 0.5, 1.99, 0.01, false, false),
             new NumberSetting("final_rate", "Final rate", "The final speed to ramp to", 1.5, 0.51, 2, 0.01, false, false),

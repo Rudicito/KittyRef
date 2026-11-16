@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
-using KittyRef.Core.Referee.Models.Events;
+using Mod = KittyRef.Core.Models.Mods.Mod;
 
 namespace KittyRef.Core.Models
 {
@@ -24,15 +24,8 @@ namespace KittyRef.Core.Models
         public MatchUserStatus Status { get; internal set; }
 
         /// <summary>
-        /// The player's current selected style.
-        /// Only applicable if the current <see cref="PlaylistItem"/> enabled <see cref="PlaylistItem.Freestyle"/>.
-        /// </summary>
-        /// <seealso cref="IRefereeHubClient.UserStyleChanged"/>
-        public Style Style { get; internal set; } = new Style();
-
-        /// <summary>
         /// The player's current selected mods.
-        /// Only applicable if the current <see cref="PlaylistItem"/> specifies any <see cref="PlaylistItem.AllowedMods"/>.
+        /// Only applicable if the current <see cref="PlaylistItem"/> specifies any <see cref="PlaylistItem.allowedMods"/>.
         /// </summary>
         /// <seealso cref="IRefereeHubClient.UserModsChanged"/>
         public List<Mod> UserMods { get; internal set; } = [];
@@ -44,9 +37,14 @@ namespace KittyRef.Core.Models
         /// <seealso cref="IRefereeHubClient.UserTeamChanged"/>
         public MatchTeam? Team { get; internal set; }
 
-        // public static Player From(Player player)
-        // {
-        //
-        // }
+        /// <summary>
+        /// The ruleset of the user, if in freestyle.
+        /// </summary>
+        public Ruleset? Ruleset { get; internal set; }
+
+        /// <summary>
+        /// The ID of the beatmap difficulty selected by the user, if in freestyle
+        /// </summary>
+        public int? BeatmapId { get; internal set; }
     }
 }

@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace KittyRef.Core.Models.Mods.Rulesets.Catch
+namespace KittyRef.Core.Models.Mods.Rulesets.Osu
 {
-    public class ModScoreV2 : Mod
+    public class OsuModScoreV2 : Mod
     {
         public override string Acronym => "SV2";
         public override string Name => "Score V2";
 
-        public override Ruleset Ruleset => Ruleset.Catch;
+        public override Ruleset Ruleset => Ruleset.Osu;
 
         public override ModType Type => ModType.System;
 
@@ -17,7 +17,9 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
         [
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

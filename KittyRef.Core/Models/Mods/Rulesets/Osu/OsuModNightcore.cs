@@ -19,12 +19,14 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModDaycore),
             typeof(OsuModDoubleTime),
             typeof(OsuModNightcore),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(OsuModWindUp),
+            typeof(OsuModWindDown),
+            typeof(OsuModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("speed_change", "Speed increase", "The actual increase to apply", 1.5, 1.01, 2, 0.01, false, false),
         ];

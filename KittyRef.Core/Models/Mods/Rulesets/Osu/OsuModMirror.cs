@@ -18,9 +18,11 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Osu
             typeof(OsuModHardRock),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
-            new EnumSetting<MirrorType>("reflection", "Flipped axes", "", MirrorType.Horizontal),
+            new ChoiceSetting("reflection", "Flipped axes", "", "Horizontal", ["Horizontal", "Vertical", "Both"]),
         ];
 
         public override bool UserPlayable => true;

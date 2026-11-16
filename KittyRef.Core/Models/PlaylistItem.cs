@@ -1,4 +1,5 @@
-using KittyRef.Core.Referee.Models;
+using System.Collections.Generic;
+using KittyRef.Core.Models.Mods;
 
 namespace KittyRef.Core.Models
 {
@@ -10,9 +11,9 @@ namespace KittyRef.Core.Models
         public long PlaylistItemId { get; internal set; }
 
         /// <summary>
-        /// The ID of the ruleinternal set of the playlist item.
+        /// The ruleset set of the playlist item.
         /// </summary>
-        public int RulesetId { get; internal set; }
+        public Ruleset Ruleset { get; internal set; }
 
         /// <summary>
         /// The ID of the beatmap of the playlist item.
@@ -22,12 +23,14 @@ namespace KittyRef.Core.Models
         /// <summary>
         /// The mods required by this playlist item.
         /// </summary>
-        public Mod[] RequiredMods { get; internal set; } = [];
+        public IReadOnlyList<Mod> RequiredMods => requiredMods;
+        internal List<Mod> requiredMods = [];
 
         /// <summary>
         /// The mods allowed for player selection by this playlist item.
         /// </summary>
-        public Mod[] AllowedMods { get; internal set; } = [];
+        public IReadOnlyList<Mod> AllowedMods => allowedMods;
+        internal List<Mod> allowedMods = [];
 
         /// <summary>
         /// Whether this playlist item permits players to freestyle.

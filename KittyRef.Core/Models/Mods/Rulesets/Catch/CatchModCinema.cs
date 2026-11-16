@@ -18,14 +18,16 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Catch
             typeof(CatchModNoFail),
             typeof(CatchModSuddenDeath),
             typeof(CatchModPerfect),
-            typeof(ModAccuracyChallenge),
+            typeof(CatchModAccuracyChallenge),
             typeof(CatchModAutoplay),
             typeof(CatchModCinema),
             typeof(CatchModRelax),
             typeof(CatchModMovingFast),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
         ];
 

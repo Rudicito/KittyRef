@@ -25,11 +25,19 @@ dotnet_diagnostic.CS1591.severity = none
 
 #PascalCase for public and protected members
 dotnet_naming_style.pascalcase.capitalization = pascal_case
-dotnet_naming_symbols.public_members.applicable_accessibilities = public,internal,protected,protected_internal,private_protected
+dotnet_naming_symbols.public_members.applicable_accessibilities = public,protected,private_protected
 dotnet_naming_symbols.public_members.applicable_kinds = property,method,field,event
 dotnet_naming_rule.public_members_pascalcase.severity = error
 dotnet_naming_rule.public_members_pascalcase.symbols = public_members
 dotnet_naming_rule.public_members_pascalcase.style = pascalcase
+
+#camelCase for internal
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_symbols.internal_members.applicable_accessibilities = internal,protected_internal
+dotnet_naming_symbols.internal_members.applicable_kinds = property,method,field,event
+dotnet_naming_rule.internal_members_camelcase.severity = error
+dotnet_naming_rule.internal_members_camelcase.symbols = internal_members
+dotnet_naming_rule.internal_members_camelcase.style = camel_case_style
 
 #camelCase for private members
 dotnet_naming_style.camelcase.capitalization = camel_case

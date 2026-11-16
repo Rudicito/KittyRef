@@ -19,12 +19,14 @@ namespace KittyRef.Core.Models.Mods.Rulesets.Mania
             typeof(ManiaModDaycore),
             typeof(ManiaModDoubleTime),
             typeof(ManiaModNightcore),
-            typeof(ModWindUp),
-            typeof(ModWindDown),
-            typeof(ModAdaptiveSpeed),
+            typeof(ManiaModWindUp),
+            typeof(ManiaModWindDown),
+            typeof(ManiaModAdaptiveSpeed),
         ];
 
-        public override IReadOnlyList<ModSetting> Settings =>
+        public override IReadOnlyList<ModSetting> Settings => settings;
+
+        private readonly IReadOnlyList<ModSetting> settings =
         [
             new NumberSetting("speed_change", "Speed increase", "The actual increase to apply", 1.5, 1.01, 2, 0.01, false, false),
         ];
