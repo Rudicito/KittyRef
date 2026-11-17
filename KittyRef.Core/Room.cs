@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
@@ -12,9 +13,17 @@ using KittyRef.Core.Referee.Models.Responses;
 
 namespace KittyRef.Core;
 
-public class Room
+public class Room : IDisposable
 {
-    private IRefereeHubServer hub;
+    private readonly IRefereeHubServer hub;
+
+    private CancellationTokenSource cts = new CancellationTokenSource();
+
+    /// <summary>
+    /// Cancelled when the room is disposed (left, closed or manager shut down).
+    /// Should be used for background job.
+    /// </summary>
+    public CancellationToken Lifetime => cts.Token;
 
     /// <summary>
     /// The ID of the room.
@@ -102,6 +111,10 @@ public class Room
 
     internal List<User> bannedUsers = [];
 
+    public IReadOnlyList<Countdown> Countdowns => countdowns;
+
+    internal List<Countdown> countdowns = [];
+
     /// <summary>
     /// Trigger at each property modification
     /// </summary>
@@ -127,7 +140,7 @@ public class Room
         Locked = response.StateDto.Locked;
         Slots = response.StateDto.Slots;
         QueueMode = response.QueueMode;
-        referees = response.Referees.Select(RefereeMapping.FromDto).ToList();
+        referees = response.Referees.Select(r => new User{UserId = r.UserId}).ToList();
 
         playlist = response.Playlist.Select(PlaylistItemMapping.FromDto).ToList();
 
@@ -141,8 +154,6 @@ public class Room
     public PlaylistItem? GetPlaylistItem(long playlistItemId) => Playlist.FirstOrDefault(p => p.PlaylistItemId == playlistItemId);
 
     public Player? GetPlayer(long userId) => players.FirstOrDefault(p => p.UserId == userId);
-
-    public Models.Referee? GetReferee(long userId) => referees.FirstOrDefault(r => r.UserId == userId);
 
     #endregion
 
@@ -290,4 +301,17 @@ public class Room
     }
 
     #endregion
+
+    private bool disposed;
+
+    public void Dispose()
+    {
+        if (disposed) return;
+        disposed = true;
+
+        cts.Cancel();
+        cts.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
 }
