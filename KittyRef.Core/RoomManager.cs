@@ -9,7 +9,6 @@ using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Mapping;
 using Microsoft.Extensions.Logging;
 using osu.NET;
-using Player = KittyRef.Core.Models.Player;
 
 namespace KittyRef.Core;
 

@@ -1,5 +1,5 @@
+using KittyRef.Desktop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using MainWindowViewModel = KittyRef.Desktop.ViewModels.MainWindowViewModel;
 
 namespace KittyRef.Desktop.Services;
 

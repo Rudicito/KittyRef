@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using KittyRef.Desktop.Services;
+using KittyRef.Desktop.ViewModels;
+using KittyRef.Desktop.Views;
 using Microsoft.Extensions.DependencyInjection;
-using MainWindow = KittyRef.Desktop.Views.MainWindow;
-using MainWindowViewModel = KittyRef.Desktop.ViewModels.MainWindowViewModel;
 
 namespace KittyRef.Desktop;
 

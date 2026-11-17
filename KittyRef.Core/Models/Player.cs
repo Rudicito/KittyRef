@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using KittyRef.Core.Models.Mods;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
-using Mod = KittyRef.Core.Models.Mods.Mod;
 
 namespace KittyRef.Core.Models
 {
