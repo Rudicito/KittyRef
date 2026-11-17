@@ -34,6 +34,8 @@ public class RoomManager : IDisposable
         this.logger = logger;
         rooms = new Dictionary<long, Room>();
         listRoom = new Dictionary<long, RoomInfo>();
+
+        addEventRouter();
     }
 
     public async Task OpenRoom(RoomInfo roomInfo)
@@ -86,14 +88,44 @@ public class RoomManager : IDisposable
         refereeHub.Events.MatchCompleted += onMatchCompleted;
     }
 
+    private void removeEventRouter()
+    {
+        refereeHub.Events.UserJoined -= onUserJoined;
+        refereeHub.Events.UserLeft -= onUserLeft;
+        refereeHub.Events.UserKicked -= onUserKicked;
+        refereeHub.Events.UserBanned -= onUserBanned;
+        refereeHub.Events.RefereeAdded -= onRefereeAdded;
+        refereeHub.Events.RefereeRemoved -= onRefereeRemoved;
+        refereeHub.Events.RefereeInvited -= onRefereeInvited;
+        refereeHub.Events.RoomSettingsChanged -= onRoomSettingsChanged;
+        refereeHub.Events.MatchStateChanged -= onMatchStateChanged;
+        refereeHub.Events.PlaylistItemAdded -= onPlaylistItemAdded;
+        refereeHub.Events.PlaylistItemChanged -= onPlaylistItemChanged;
+        refereeHub.Events.PlaylistItemRemoved -= onPlaylistItemRemoved;
+        refereeHub.Events.RollCompleted -= onRollCompleted;
+        refereeHub.Events.UserStatusChanged -= onUserStatusChanged;
+        refereeHub.Events.UserModsChanged -= onUserModsChanged;
+        refereeHub.Events.UserStyleChanged -= onUserStyleChanged;
+        refereeHub.Events.UserTeamChanged -= onUserTeamChanged;
+        refereeHub.Events.CountdownStarted -= onCountdownStarted;
+        refereeHub.Events.CountdownStopped -= onCountdownStopped;
+        refereeHub.Events.MatchStarted -= onMatchStarted;
+        refereeHub.Events.MatchAborted -= onMatchAborted;
+        refereeHub.Events.MatchCompleted -= onMatchCompleted;
+    }
+
     private void onUserJoined(UserJoinedEvent e)
     {
         updateRoom(e.RoomId, room =>
         {
-            room.players.Add(new Player
+            var player = new Player
             {
                 UserId = (int)e.UserId
-            });
+            };
+
+            room.players.Add(player);
+
+            _ = fetchUsernameAsync(player, e.RoomId, room.Lifetime);
         });
     }
 
@@ -359,6 +391,8 @@ public class RoomManager : IDisposable
     {
         foreach (var room in rooms)
             room.Value.Dispose();
+
+        removeEventRouter();
 
         GC.SuppressFinalize(this);
     }
