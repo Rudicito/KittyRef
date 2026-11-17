@@ -5,18 +5,8 @@ using Mod = KittyRef.Core.Models.Mods.Mod;
 
 namespace KittyRef.Core.Models
 {
-    public class Player
+    public class Player : User
     {
-        /// <summary>
-        /// The ID of the player.
-        /// </summary>
-        public int UserId { get; internal set; }
-
-        /// <summary>
-        /// The name of the player
-        /// </summary>
-        public string Username { get; internal set; } = string.Empty;
-
         /// <summary>
         /// The player's current status.
         /// </summary>

@@ -1,18 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Mapping;
+using Microsoft.Extensions.Logging;
+using osu.NET;
 using Player = KittyRef.Core.Models.Player;
 
 namespace KittyRef.Core;
 
-public class RoomManager
+public class RoomManager : IDisposable
 {
     private readonly Action<Action> post;
+    private readonly ILogger<RoomManager> logger;
 
     public IReadOnlyDictionary<long, Room> Rooms => rooms;
     private Dictionary<long, Room> rooms;
@@ -21,11 +25,14 @@ public class RoomManager
     private Dictionary<long, RoomInfo> listRoom;
 
     private readonly RefereeHub refereeHub;
+    private readonly OsuApiClient api;
 
-    public RoomManager(RefereeHub refereeHub, Action<Action> post)
+    public RoomManager(RefereeHub refereeHub, OsuApiClient api, Action<Action> post, ILogger<RoomManager> logger)
     {
-        this.post = post;
         this.refereeHub = refereeHub;
+        this.api = api;
+        this.post = post;
+        this.logger = logger;
         rooms = new Dictionary<long, Room>();
         listRoom = new Dictionary<long, RoomInfo>();
     }
@@ -113,11 +120,14 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.bannedUsers.Add(new User
+            var user = new User
             {
-                UserId = (int)e.BannedUserId
-                //todo: add username
-            });
+                UserId = (int)e.BannedUserId,
+            };
+
+            room.bannedUsers.Add(user);
+
+            _ = fetchUsernameAsync(user, e.RoomId, room.Lifetime);
         });
     }
 
@@ -125,11 +135,14 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
-            room.referees.Add(new User
+            var user = new User
             {
                 UserId = e.UserId
-                //todo: add username
-            });
+            };
+
+            room.referees.Add(user);
+
+            _ = fetchUsernameAsync(user, e.RoomId, room.Lifetime);
         });
     }
 
@@ -260,6 +273,12 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            room.countdowns.Add(new Countdown
+            {
+                CountdownId = e.CountdownId,
+                Seconds = e.Seconds,
+                Type = e.Type
+            });
         });
     }
 
@@ -267,6 +286,8 @@ public class RoomManager
     {
         updateRoom(e.RoomId, room =>
         {
+            var countdown = room.countdowns.FirstOrDefault(c => c.CountdownId == e.CountdownId);
+            if (countdown != null) room.countdowns.Remove(countdown);
         });
     }
 
@@ -304,5 +325,42 @@ public class RoomManager
         });
     }
 
+
+    private async Task fetchUsernameAsync(User user, long roomId, CancellationToken ct)
+    {
+        try
+        {
+            var response = await api.GetUserAsync(user.UserId, cancellationToken: ct);
+
+            ct.ThrowIfCancellationRequested();
+
+            if (response.IsFailure)
+            {
+                logger.LogWarning("An error occurred while fetching a username for the user {UserId} : {Error}", user.UserId, response.Error);
+                return;
+            }
+
+            user.Username = response.Value?.Username;
+
+            if (rooms.TryGetValue(roomId, out var room))
+                room.NotifyChanged();
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An unexpected exception occurred while fetching a username of a user");
+        }
+    }
+
     #endregion
+
+    public void Dispose()
+    {
+        foreach (var room in rooms)
+            room.Value.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
 }
