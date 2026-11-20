@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KittyRef.Core.Chat;
 using KittyRef.Core.Models;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
@@ -24,11 +25,13 @@ public class RoomManager : IDisposable
     private Dictionary<long, RoomInfo> listRoom;
 
     private readonly RefereeHub refereeHub;
+    private readonly ChatHub chatHub;
     private readonly OsuApiClient api;
 
-    public RoomManager(RefereeHub refereeHub, OsuApiClient api, Action<Action> post, ILogger<RoomManager> logger)
+    public RoomManager(RefereeHub refereeHub, ChatHub chatHub, OsuApiClient api, Action<Action> post, ILogger<RoomManager> logger)
     {
         this.refereeHub = refereeHub;
+        this.chatHub = chatHub;
         this.api = api;
         this.post = post;
         this.logger = logger;
@@ -86,6 +89,8 @@ public class RoomManager : IDisposable
         refereeHub.Events.MatchStarted += onMatchStarted;
         refereeHub.Events.MatchAborted += onMatchAborted;
         refereeHub.Events.MatchCompleted += onMatchCompleted;
+
+        chatHub.NewMessage += onNewMessage;
     }
 
     private void removeEventRouter()
@@ -112,6 +117,8 @@ public class RoomManager : IDisposable
         refereeHub.Events.MatchStarted -= onMatchStarted;
         refereeHub.Events.MatchAborted -= onMatchAborted;
         refereeHub.Events.MatchCompleted -= onMatchCompleted;
+
+        chatHub.NewMessage -= onNewMessage;
     }
 
     private void onUserJoined(UserJoinedEvent e)
@@ -347,15 +354,65 @@ public class RoomManager : IDisposable
     {
         post(() =>
         {
+            if (disposed)
+                return;
+
             if (!rooms.TryGetValue(roomId, out var room))
                 return;
 
-            change(room);
-
-            if (triggerChanged) room.NotifyChanged();
+            internalUpdateRoom(room, change, triggerChanged);
         });
     }
 
+    private void internalUpdateRoom(Room room, Action<Room> change, bool triggerChanged = true)
+    {
+        try
+        {
+            change(room);
+
+            if (triggerChanged) room.NotifyChanged();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to apply an event to room {RoomId}", room.RoomId);
+        }
+    }
+
+    private void onNewMessage(ChatNewMessage e)
+    {
+        try
+        {
+            foreach (var group in e.Messages.GroupBy(m => m.ChannelId))
+            {
+                var messages = group.Select(m => new ChatMessage
+                {
+                    UserId = m.SenderId,
+                    Username = m.Sender?.Username,
+                    Message = m.Content,
+                    Timestamp = m.Timestamp
+                }).ToList();
+
+                long channelId = group.Key;
+
+                post(() =>
+                {
+                    if (disposed) return;
+
+                    var room = rooms.Values.FirstOrDefault(r => r.ChatChannelId == channelId);
+                    if (room == null) return;
+
+                    internalUpdateRoom(room, r =>
+                    {
+                        r.chatMessages.AddRange(messages);
+                    });
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to process a chat message event");
+        }
+    }
 
     private async Task fetchUsernameAsync(User user, long roomId, CancellationToken ct)
     {
@@ -387,8 +444,13 @@ public class RoomManager : IDisposable
 
     #endregion
 
+    private bool disposed;
+
     public void Dispose()
     {
+        if (disposed) return;
+        disposed = true;
+
         foreach (var room in rooms)
             room.Value.Dispose();
 
