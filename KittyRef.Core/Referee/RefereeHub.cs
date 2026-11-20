@@ -49,7 +49,7 @@ public class RefereeHub: IAsyncDisposable
     private readonly CancellationTokenSource cts = new();
     private readonly SemaphoreSlim refreshLock = new(1, 1);
 
-    public RefereeHub(ITokenSource tokenSource, ILoggerFactory? loggerFactory = null)
+    public RefereeHub(ITokenSource tokenSource, ILoggerFactory? loggerFactory)
     {
         this.tokenSource = tokenSource;
         loggerFactory ??= NullLoggerFactory.Instance;

@@ -33,7 +33,7 @@ public class Room : IDisposable
     /// <summary>
     /// The ID of the chat channel for the joined multiplayer room.
     /// </summary>
-    public int ChatChannelId { get; internal set; }
+    public long ChatChannelId { get; internal set; }
 
     /// <summary>
     /// The name of the room.
@@ -114,6 +114,10 @@ public class Room : IDisposable
     public IReadOnlyList<Countdown> Countdowns => countdowns;
 
     internal List<Countdown> countdowns = [];
+
+    public IReadOnlyList<ChatMessage> ChatMessages => chatMessages;
+
+    internal List<ChatMessage> chatMessages = [];
 
     /// <summary>
     /// Trigger at each property modification
