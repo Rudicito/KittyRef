@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using KittyRef.Core.Chat;
 using KittyRef.Core.Models;
+using KittyRef.Core.Models.Chat;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Mapping;
@@ -384,11 +385,13 @@ public class RoomManager : IDisposable
         {
             foreach (var group in e.Messages.GroupBy(m => m.ChannelId))
             {
-                var messages = group.Select(m => new ChatMessage
+                var messages = group.Select(m => new Message
                 {
+                    Id = m.MessageId,
+                    Uuid = m.UUID ?? string.Empty,
                     UserId = m.SenderId,
                     Username = m.Sender?.Username,
-                    Message = m.Content,
+                    Content = m.Content,
                     Timestamp = m.Timestamp
                 }).ToList();
 
@@ -398,12 +401,12 @@ public class RoomManager : IDisposable
                 {
                     if (disposed) return;
 
-                    var room = rooms.Values.FirstOrDefault(r => r.ChatChannelId == channelId);
+                    var room = rooms.Values.FirstOrDefault(r => r.chatChannelId == channelId);
                     if (room == null) return;
 
                     internalUpdateRoom(room, r =>
                     {
-                        r.chatMessages.AddRange(messages);
+                        r.addMessages(messages.ToArray());
                     });
                 });
             }

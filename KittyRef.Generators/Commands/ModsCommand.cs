@@ -19,6 +19,9 @@ using Scriban;
 
 namespace KittyRef.Generators.Commands
 {
+    /// <summary>
+    /// Based on https://github.com/ppy/osu-tools/blob/master/PerformanceCalculator/Difficulty/ModsCommand.cs
+    /// </summary>
     [Command(Name = "mods", Description = "Generate C# classes of osu! mods")]
     public class ModsCommand
     {
