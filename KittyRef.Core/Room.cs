@@ -5,19 +5,24 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using KittyRef.Core.Models;
+using KittyRef.Core.Models.Chat;
 using KittyRef.Core.Referee;
 using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Mapping;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
+using Microsoft.Extensions.Logging;
 
 namespace KittyRef.Core;
 
+//todo: every public methods should have a try catch, to not crash the app at any exception
 public class Room : IDisposable
 {
     private readonly IRefereeHubServer hub;
+    private readonly IApiRoom api;
+    private readonly ILogger logger;
 
-    private CancellationTokenSource cts = new CancellationTokenSource();
+    private CancellationTokenSource cts;
 
     /// <summary>
     /// Cancelled when the room is disposed (left, closed or manager shut down).
@@ -31,9 +36,14 @@ public class Room : IDisposable
     public long RoomId { get; internal set; }
 
     /// <summary>
-    /// The ID of the chat channel for the joined multiplayer room.
+    /// The chat channel of the room
     /// </summary>
-    public long ChatChannelId { get; internal set; }
+    private ChatChannel chatChannel;
+
+    /// <summary>
+    /// The ID of the chat channel of the room
+    /// </summary>
+    internal long chatChannelId => chatChannel.Id;
 
     /// <summary>
     /// The name of the room.
@@ -115,10 +125,6 @@ public class Room : IDisposable
 
     internal List<Countdown> countdowns = [];
 
-    public IReadOnlyList<ChatMessage> ChatMessages => chatMessages;
-
-    internal List<ChatMessage> chatMessages = [];
-
     /// <summary>
     /// Trigger at each property modification
     /// </summary>
@@ -126,17 +132,25 @@ public class Room : IDisposable
 
     public void NotifyChanged() => Changed?.Invoke();
 
-    public Room(IRefereeHubServer hub)
+    internal Room(IRefereeHubServer hub,  IApiRoom api, ILogger logger)
     {
         this.hub = hub;
+        this.logger = logger;
+        this.api = api;
+        cts = new CancellationTokenSource();
+
+        chatChannel = new ChatChannel(-1);
     }
 
-    public Room(IRefereeHubServer hub, RoomJoinedResponse response)
+    internal Room(IRefereeHubServer hub,  IApiRoom api, ILogger logger, RoomJoinedResponse response)
     {
         this.hub = hub;
+        this.api = api;
+        this.logger = logger;
+        cts = new CancellationTokenSource();
 
         RoomId = response.RoomId;
-        ChatChannelId = response.ChatChannelId;
+        chatChannel = new ChatChannel(response.ChatChannelId);
         Name = response.Name;
         Password = response.Password;
         MaxParticipants = response.MaxParticipants;
@@ -158,6 +172,47 @@ public class Room : IDisposable
     public PlaylistItem? GetPlaylistItem(long playlistItemId) => Playlist.FirstOrDefault(p => p.PlaylistItemId == playlistItemId);
 
     public Player? GetPlayer(long userId) => players.FirstOrDefault(p => p.UserId == userId);
+
+    #endregion
+
+    #region Message methods
+
+    /// <summary>
+    /// Send a message in the room.
+    /// </summary>
+    /// <param name="text">The message</param>
+    public void SendMessage(string text)
+    {
+        var message = new LocalMessage(text);
+        formatMessage(message);
+        chatChannel.addLocal(message);
+
+        //todo: this freeze the ui
+        api.SendMessage(chatChannelId, message.Content, false, Lifetime);
+    }
+
+    internal void addMessages(Message[] messages)
+    {
+        foreach (var message in messages)
+            formatMessage(message);
+
+        chatChannel.addNewMessages(messages);
+    }
+
+    private void formatMessage(Message message)
+    {
+        try
+        {
+            MessageFormatter.FormatMessage(message);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error while formating a message");
+
+            // fallback
+            message.DisplayContent = message.Content;
+        }
+    }
 
     #endregion
 
