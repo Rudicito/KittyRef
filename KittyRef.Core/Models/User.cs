@@ -10,6 +10,6 @@ namespace KittyRef.Core.Models
         /// <summary>
         /// The name of the user.
         /// </summary>
-        public string? Username { get; internal set; } = string.Empty;
+        public string? Username { get; internal set; }
     }
 }

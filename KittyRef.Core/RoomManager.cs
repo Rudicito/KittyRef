@@ -7,6 +7,7 @@ using KittyRef.Core.Chat;
 using KittyRef.Core.Models;
 using KittyRef.Core.Models.Chat;
 using KittyRef.Core.Referee;
+using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Events;
 using KittyRef.Core.Referee.Models.Mapping;
 using Microsoft.Extensions.Logging;
@@ -310,14 +311,24 @@ public class RoomManager : IDisposable
 
     private void onCountdownStarted(CountdownStartedEvent e)
     {
+        var now = DateTimeOffset.UtcNow;
+
         updateRoom(e.RoomId, room =>
         {
-            room.countdowns.Add(new Countdown
+            switch (e.Type)
             {
-                CountdownId = e.CountdownId,
-                Seconds = e.Seconds,
-                Type = e.Type
-            });
+                case CountdownType.MatchStart:
+                    room.MatchStartCountdown = new Countdown(e.CountdownId, e.Seconds, now);
+                    break;
+
+                case CountdownType.ServerShuttingDown:
+                    room.ServerShuttingDownCountdown = new Countdown(e.CountdownId, e.Seconds, now);
+                    break;
+
+                default:
+                    logger.LogWarning("Unknow countdown type received {Type} (ID: {CountdownId}) in room {RoomId}", e.Type, e.CountdownId, e.RoomId);
+                    break;
+            }
         });
     }
 
@@ -325,9 +336,29 @@ public class RoomManager : IDisposable
     {
         updateRoom(e.RoomId, room =>
         {
-            var countdown = room.countdowns.FirstOrDefault(c => c.CountdownId == e.CountdownId);
-            if (countdown != null) room.countdowns.Remove(countdown);
-        });
+            switch (e.Type)
+            {
+                case CountdownType.MatchStart:
+                    if (room.MatchStartCountdown?.Id == e.CountdownId)
+                    {
+                        room.MatchStartCountdown = null;
+                        room.NotifyChanged();
+                    }
+                    break;
+
+                case CountdownType.ServerShuttingDown:
+                    if (room.ServerShuttingDownCountdown?.Id == e.CountdownId)
+                    {
+                        room.ServerShuttingDownCountdown = null;
+                        room.NotifyChanged();
+                    }
+                    break;
+
+                default:
+                    logger.LogWarning("Unknow countdown type received {Type} (ID: {CountdownId}) in room {RoomId}", e.Type, e.CountdownId, e.RoomId);
+                    break;
+            }
+        }, false);
     }
 
     private void onMatchStarted(MatchStartedEvent e)
