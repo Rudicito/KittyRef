@@ -15,7 +15,6 @@ using Microsoft.Extensions.Logging;
 
 namespace KittyRef.Core;
 
-//todo: every public methods should have a try catch, to not crash the app at any exception
 public class Room : IDisposable
 {
     private readonly IRefereeHubServer hub;
@@ -38,7 +37,7 @@ public class Room : IDisposable
     /// <summary>
     /// The chat channel of the room
     /// </summary>
-    private ChatChannel chatChannel;
+    private readonly ChatChannel chatChannel;
 
     /// <summary>
     /// The ID of the chat channel of the room
@@ -173,6 +172,24 @@ public class Room : IDisposable
 
     public Player? GetPlayer(long userId) => players.FirstOrDefault(p => p.UserId == userId);
 
+    private async Task<bool> safeCall(Func<Task> action)
+    {
+        try
+        {
+            await action.Invoke();
+            return true;
+        }
+        catch (OperationCanceledException) when (Lifetime.IsCancellationRequested)
+        {
+            return false;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "A request to the server failed");
+            return false;
+        }
+    }
+
     #endregion
 
     #region Message methods
@@ -181,14 +198,13 @@ public class Room : IDisposable
     /// Send a message in the room.
     /// </summary>
     /// <param name="text">The message</param>
-    public void SendMessage(string text)
+    public Task<bool> SendMessage(string text)
     {
         var message = new LocalMessage(text);
         formatMessage(message);
         chatChannel.addLocal(message);
 
-        //todo: this freeze the ui
-        api.SendMessage(chatChannelId, message.Content, false, Lifetime);
+        return safeCall(() => api.SendMessage(chatChannelId, message.Content, false, Lifetime));
     }
 
     internal void addMessages(Message[] messages)
@@ -207,7 +223,7 @@ public class Room : IDisposable
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error while formating a message");
+            logger.LogError(e, "Error while formating a chat message");
 
             // fallback
             message.DisplayContent = message.Content;
@@ -219,73 +235,73 @@ public class Room : IDisposable
     #region Referee methods
 
     /// <inheritdoc cref="IRefereeHubServer.CloseRoom"/>
-    public Task CloseRoom()
+    public Task<bool> CloseRoom()
     {
-        return hub.CloseRoom(RoomId);
+        return safeCall(() => hub.CloseRoom(RoomId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.InvitePlayer"/>
-    public Task InvitePlayer(int userId)
+    public Task<bool> InvitePlayer(int userId)
     {
-        return hub.InvitePlayer(RoomId, userId);
+        return safeCall(() => hub.InvitePlayer(RoomId, userId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.KickPlayer"/>
-    public Task KickPlayer(int userId)
+    public Task<bool> KickPlayer(int userId)
     {
-        return hub.KickPlayer(RoomId, userId);
+        return safeCall(() => hub.KickPlayer(RoomId, userId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.BanUser"/>
-    public Task BanUser(int bannedUserId)
+    public Task<bool> BanUser(int bannedUserId)
     {
-        return hub.BanUser(RoomId, bannedUserId);
+        return safeCall(() => hub.BanUser(RoomId, bannedUserId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.AddReferee"/>
-    public Task AddReferee(int targetUserId)
+    public Task<bool> AddReferee(int targetUserId)
     {
-        return hub.AddReferee(RoomId, targetUserId);
+        return safeCall(() => hub.AddReferee(RoomId, targetUserId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.RemoveReferee"/>
-    public Task RemoveReferee(int targetUserId)
+    public Task<bool> RemoveReferee(int targetUserId)
     {
-        return hub.RemoveReferee(RoomId, targetUserId);
+        return safeCall(() => hub.RemoveReferee(RoomId, targetUserId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.ChangeRoomSettings"/>
-    public Task ChangeRoomSettings(ChangeRoomSettingsRequest request)
+    public Task<bool> ChangeRoomSettings(ChangeRoomSettingsRequest request)
     {
-        return hub.ChangeRoomSettings(RoomId, request);
+        return safeCall(() => hub.ChangeRoomSettings(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.EditCurrentPlaylistItem"/>
-    public Task EditCurrentPlaylistItem(EditCurrentPlaylistItemRequest request)
+    public Task<bool> EditCurrentPlaylistItem(EditCurrentPlaylistItemRequest request)
     {
-        return hub.EditCurrentPlaylistItem(RoomId, request);
+        return safeCall(() => hub.EditCurrentPlaylistItem(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.AddPlaylistItem"/>
-    public Task AddPlaylistItem(AddPlaylistItemRequest request)
+    public Task<bool> AddPlaylistItem(AddPlaylistItemRequest request)
     {
-        return hub.AddPlaylistItem(RoomId, request);
+        return safeCall(() => hub.AddPlaylistItem(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.EditPlaylistItem"/>
-    public Task EditPlaylistItem(EditPlaylistItemRequest request)
+    public Task<bool> EditPlaylistItem(EditPlaylistItemRequest request)
     {
-        return hub.EditPlaylistItem(RoomId, request);
+        return safeCall(() => hub.EditPlaylistItem(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.RemovePlaylistItem"/>
-    public Task RemovePlaylistItem(RemovePlaylistItemRequest request)
+    public Task<bool> RemovePlaylistItem(RemovePlaylistItemRequest request)
     {
-        return hub.RemovePlaylistItem(RoomId, request);
+        return safeCall(() => hub.RemovePlaylistItem(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.Roll"/>
-    public Task Roll(int max = 100)
+    public Task<bool> Roll(int max = 100)
     {
         Debug.Assert(max >= 2 && max <= 100);
 
@@ -294,13 +310,13 @@ public class Room : IDisposable
             Max = (uint?)max
         };
 
-        return hub.Roll(RoomId, request);
+        return safeCall(() => hub.Roll(RoomId, request));
     }
 
     /// <summary>
     /// Move a user
     /// </summary>
-    public Task MoveUser(int userId, int slot)
+    public Task<bool> MoveUser(int userId, int slot)
     {
         var request = new MoveUserRequest
         {
@@ -308,13 +324,13 @@ public class Room : IDisposable
             Slot = (byte?)slot
         };
 
-        return hub.MoveUser(RoomId, request);
+        return safeCall(() => hub.MoveUser(RoomId, request));
     }
 
     /// <summary>
-    /// Change team to a player
+    /// Change team of a player
     /// </summary>
-    public Task ChangeTeam(int userId, MatchTeam team)
+    public Task<bool> ChangePlayerTeam(int userId, MatchTeam team)
     {
         var request = new MoveUserRequest
         {
@@ -322,41 +338,41 @@ public class Room : IDisposable
             Team = team
         };
 
-        return hub.MoveUser(RoomId, request);
+        return safeCall(() => hub.MoveUser(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.SetLockState"/>
-    public Task SetLockState(bool locked)
+    public Task<bool> SetLockState(bool locked)
     {
         var request = new SetLockStateRequest
         {
             Locked = locked
         };
 
-        return hub.SetLockState(RoomId, request);
+        return safeCall(() => hub.SetLockState(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.StartMatch"/>
-    public Task StartMatch(int countdown)
+    public Task<bool> StartMatch(int countdown = 0)
     {
         var request = new StartGameplayRequest
         {
-            Countdown = countdown
+            Countdown = countdown == 0 ? null : countdown
         };
 
-        return hub.StartMatch(RoomId, request);
+        return safeCall(() => hub.StartMatch(RoomId, request));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.StopMatchCountdown"/>
-    public Task StopMatchCountdown()
+    public Task<bool> StopMatchCountdown()
     {
-        return hub.StopMatchCountdown(RoomId);
+        return safeCall(() => hub.StopMatchCountdown(RoomId));
     }
 
     /// <inheritdoc cref="IRefereeHubServer.AbortMatch"/>
-    public Task AbortMatch()
+    public Task<bool> AbortMatch()
     {
-        return hub.AbortMatch(RoomId);
+        return safeCall(() => hub.AbortMatch(RoomId));
     }
 
     #endregion
