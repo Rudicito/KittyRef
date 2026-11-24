@@ -108,24 +108,42 @@ public class Room : IDisposable
 
     public PlaylistItem? CurrentBeatmap => BeatmapQueue.Count > 0 ? BeatmapQueue[0] : null;
 
+    /// <summary>
+    /// The list of players currently in the room.
+    /// </summary>
     public IReadOnlyList<Player> Players => players;
 
     internal List<Player> players = [];
 
+    /// <summary>
+    /// The list of referees for the room.
+    /// </summary>
+    /// <remarks>
+    /// This is not a list of connected referees: they are not necessarily in the room.
+    /// </remarks>
     public IReadOnlyList<User> Referees => referees;
 
     internal List<User> referees = [];
 
+    /// <summary>
+    /// The list of banned users.
+    /// </summary>
     public IReadOnlyList<User> BannedUsers => bannedUsers;
 
     internal List<User> bannedUsers = [];
 
-    public IReadOnlyList<Countdown> Countdowns => countdowns;
-
-    internal List<Countdown> countdowns = [];
+    /// <summary>
+    /// The countdown announcing the server shut down.
+    /// </summary>
+    public Countdown? ServerShuttingDownCountdown { get; internal set; }
 
     /// <summary>
-    /// Trigger at each property modification
+    /// The countdown for the start of the match.
+    /// </summary>
+    public Countdown? MatchStartCountdown { get; internal set; }
+
+    /// <summary>
+    /// Raised whenever a property changes.
     /// </summary>
     public event Action? Changed;
 
