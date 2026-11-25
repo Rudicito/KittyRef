@@ -11,6 +11,7 @@ using KittyRef.Core.Referee.Models;
 using KittyRef.Core.Referee.Models.Mapping;
 using KittyRef.Core.Referee.Models.Requests;
 using KittyRef.Core.Referee.Models.Responses;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace KittyRef.Core;
@@ -199,6 +200,17 @@ public class Room : IDisposable
         }
         catch (OperationCanceledException) when (Lifetime.IsCancellationRequested)
         {
+            return false;
+        }
+        catch (HubException e)
+        {
+            var refereeHubException = RefereeHubException.TryParse(e);
+
+            if (refereeHubException != null)
+                logger.LogError(e, "Referee request refused by the server: Error {Code}: {Message}", refereeHubException.Code, refereeHubException.Message);
+            else
+                logger.LogError(e, "A request to the server failed");
+
             return false;
         }
         catch (Exception e)
