@@ -204,7 +204,7 @@ public class Room : IDisposable
         }
         catch (HubException e)
         {
-            var refereeHubException = RefereeHubException.TryParse(e);
+            var refereeHubException = RefereeHubException.TryParse(e, logger);
 
             if (refereeHubException != null)
                 logger.LogError(e, "Referee request refused by the server: Error {Code}: {Message}", refereeHubException.Code, refereeHubException.Message);
